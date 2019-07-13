@@ -1,0 +1,66 @@
+\thispagestyle {empty}
+\contentsline {section}{\numberline {1}Wst\k ep}{9}{section.1}
+\contentsline {subsection}{\numberline {1.1}Wprowadzenie}{9}{subsection.1.1}
+\contentsline {subsection}{\numberline {1.2}Przegl\k ad pi\'smiennictwa}{9}{subsection.1.2}
+\contentsline {subsection}{\numberline {1.3}Cel pracy}{10}{subsection.1.3}
+\contentsline {section}{\numberline {2}Modelowanie uk\IeC {\l }ad\'ow p\IeC {\l }askich we wsp\'o\IeC {\l }rz\k ednych absolutnych}{11}{section.2}
+\contentsline {subsection}{\numberline {2.1}Sformu\IeC {\l }owanie wi\k ez\'ow kinematycznych}{11}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}Sformu\IeC {\l }owanie r\'owna\'n dynamiki}{13}{subsection.2.2}
+\contentsline {subsection}{\numberline {2.3}Sformu\IeC {\l }owanie r\'owna\'n dynamiki dla cz\IeC {\l }on\'ow skr\k epowanych wi\k ezami z\nobreakspace {}u\.zyciem nieoznaczonych mno\.znik\'ow Lagrange'a}{15}{subsection.2.3}
+\contentsline {section}{\numberline {3}Metody ca\IeC {\l }kowania r\'owna\'n r\'o\.zniczkowych zwyczajnych (RRZ)}{17}{section.3}
+\contentsline {subsection}{\numberline {3.1}Podzia\IeC {\l } algorytm\'ow ca\IeC {\l }kowania numerycznego}{17}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Sformu\IeC {\l }owanie problemu}{17}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}Rodzaje stabilno\'sci numerycznej}{19}{subsection.3.3}
+\contentsline {subsection}{\numberline {3.4}Niejawny schemat Eulera}{20}{subsection.3.4}
+\contentsline {subsection}{\numberline {3.5}Metoda trapez\'ow}{20}{subsection.3.5}
+\contentsline {subsection}{\numberline {3.6}Metody Rungego-Kutty}{21}{subsection.3.6}
+\contentsline {subsection}{\numberline {3.7}Kr\'otkie om\'owienie metod wielokrokowych}{22}{subsection.3.7}
+\contentsline {subsection}{\numberline {3.8}Idea metod predyktor-korektor}{23}{subsection.3.8}
+\contentsline {section}{\numberline {4}Problematyka rozwi\k azywania r\'owna\'n RRA}{25}{section.4}
+\contentsline {subsection}{\numberline {4.1}Podstawowe poj\k ecia}{25}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}Uk\IeC {\l }ady sztywne}{25}{subsection.4.2}
+\contentsline {subsection}{\numberline {4.3}Wybrane podej\'scia w rozwi\k azywaniu RRA}{26}{subsection.4.3}
+\contentsline {section}{\numberline {5}Wybrane sformu\IeC {\l }owania zadania prostego dynamiki}{29}{section.5}
+\contentsline {subsection}{\numberline {5.1}R\'ownania Newtona-Eulera wraz ze stabilizacj\k a Baumgarte'a}{29}{subsection.5.1}
+\contentsline {paragraph}{Algorytm rozwi\k azywania zadania prostego dynamiki}{29}{section*.6}
+\contentsline {subsection}{\numberline {5.2}Kanoniczne r\'ownania ruchu wraz ze stabilizacj\k a}{30}{subsection.5.2}
+\contentsline {paragraph}{Algorytm rozwi\k azywania zadania prostego dynamiki}{31}{section*.7}
+\contentsline {subsection}{\numberline {5.3}Sformu\IeC {\l }owanie oparte na rozszerzonym lagran\.zjanie i r\'ownaniach kanonicznych}{33}{subsection.5.3}
+\contentsline {subsubsection}{\numberline {5.3.1}Wersja podstawowa}{33}{subsubsection.5.3.1}
+\contentsline {subsubsection}{\numberline {5.3.2}Wersja rozszerzona}{34}{subsubsection.5.3.2}
+\contentsline {subsubsection}{\numberline {5.3.3}Algorytm rozwi\k azania}{35}{subsubsection.5.3.3}
+\contentsline {subsection}{\numberline {5.4}Sformu\IeC {\l }owanie oparte na r\'ownaniach kanonicznych z u\.zyciem niejawnej metody trapez\'ow i iteracjami Newtona-Raphsona}{35}{subsection.5.4}
+\contentsline {subsubsection}{\numberline {5.4.1}Wyprowadzenie wzor\'ow}{35}{subsubsection.5.4.1}
+\contentsline {subsubsection}{\numberline {5.4.2}Algorytm rozwi\k azania}{37}{subsubsection.5.4.2}
+\contentsline {section}{\numberline {6}Implementacja, wyniki analiz}{39}{section.6}
+\contentsline {subsection}{\numberline {6.1}Walidacja sformu\IeC {\l }owa\'n na przyk\IeC {\l }adzie podw\'ojnego wahad\IeC {\l }a i\nobreakspace {}oprogramowania \emph {Adams}}{39}{subsection.6.1}
+\contentsline {subsubsection}{\numberline {6.1.1}Budowa}{39}{subsubsection.6.1.1}
+\contentsline {subsubsection}{\numberline {6.1.2}Wyniki symulacji}{40}{subsubsection.6.1.2}
+\contentsline {paragraph}{Walidacja modeli}{40}{section*.13}
+\contentsline {paragraph}{Por\'ownanie modeli}{42}{section*.19}
+\contentsline {paragraph}{Por\'ownanie rozszerzonego lagran\.zjanu z metod\k a trapez\'ow dla r\'o\.znych parametr\'ow}{44}{section*.23}
+\contentsline {paragraph}{Wnioski}{45}{section*.27}
+\contentsline {subsection}{\numberline {6.2}Implementacja mechanizmu Andrews'a}{45}{subsection.6.2}
+\contentsline {subsubsection}{\numberline {6.2.1}Budowa mechanizmu}{45}{subsubsection.6.2.1}
+\contentsline {subsubsection}{\numberline {6.2.2}Sformu\IeC {\l }owanie modelu matematycznego}{48}{subsubsection.6.2.2}
+\contentsline {paragraph}{Wprowadzenie wsp\'o\IeC {\l }rz\k ednych}{48}{section*.34}
+\contentsline {paragraph}{R\'ownania wi\k ez\'ow}{48}{section*.35}
+\contentsline {paragraph}{Macierz Jacobiego, pochodna Macierzy Jacobiego i macierz masowa}{48}{section*.36}
+\contentsline {paragraph}{Model spr\k e\.zyny}{49}{section*.37}
+\contentsline {paragraph}{Obliczenie energii}{49}{section*.38}
+\contentsline {paragraph}{Wyznaczenie warunk\'ow pocz\k atkowych}{50}{section*.40}
+\contentsline {subsection}{\numberline {6.3}Wyniki symulacji}{52}{subsection.6.3}
+\contentsline {subsubsection}{\numberline {6.3.1}U\.zycie jawnej procedury ca\IeC {\l }kuj\k acej}{52}{subsubsection.6.3.1}
+\contentsline {paragraph}{Wykresy}{52}{section*.42}
+\contentsline {paragraph}{Wnioski}{57}{section*.56}
+\contentsline {subsubsection}{\numberline {6.3.2}U\.zycie metody trapez\'ow}{57}{subsubsection.6.3.2}
+\contentsline {paragraph}{Por\'ownanie z metodami jawnymi}{57}{section*.57}
+\contentsline {paragraph}{Wykresy}{57}{section*.58}
+\contentsline {paragraph}{Wnioski}{59}{section*.65}
+\contentsline {subsubsection}{\numberline {6.3.3}Spe\IeC {\l }nienie warunku na energi\k e}{60}{subsubsection.6.3.3}
+\contentsline {paragraph}{Wykresy}{60}{section*.66}
+\contentsline {paragraph}{Wnioski}{62}{section*.73}
+\contentsline {subsubsection}{\numberline {6.3.4}Problematyka wektora $\bm {\upsigma }$}{63}{subsubsection.6.3.4}
+\contentsline {section}{\numberline {7}Podsumowanie i perspektywy}{65}{section.7}
+\contentsline {section}{Spis pi\'smiennictwa}{67}{section*.78}
+\contentsline {section}{Za\IeC {\l }\k aczniki}{71}{section*.81}

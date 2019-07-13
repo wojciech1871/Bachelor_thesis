@@ -1,0 +1,2157 @@
+\documentclass[11pt,a4paper,twoside,openright]{article}
+\usepackage{graphicx, color, rotating} %opcja [pdftex] - potrzebna czy nie?
+\usepackage[MeX, plmath]{polski} %MeX - tryb pe³nej polonizacji
+\usepackage[OT4]{fontenc} % T1 - sk³ad fontami EC; OT4 - uk³ad fontów PL
+%\usepackage{polski}
+%\usepackage[T1]{fontenc}
+\usepackage{ae,aecompl}
+\usepackage[cp1250]{inputenc}
+\usepackage{a4wide}
+\usepackage{amsmath}
+\usepackage{amssymb, latexsym}
+%\usepackage{fixmath}
+\usepackage{array}
+\usepackage{bm}
+\usepackage[space]{cite}
+\usepackage{enumerate}
+\usepackage[font=footnotesize]{caption} %rozmiar czcionki podpisów pod rysunkami
+\usepackage{float}
+\usepackage{subfig} %obrazki obok siebie
+\usepackage{verbatim} %do wy/swietlania tekstu tak, jak wygl/ada w edytorze (tek/scie Ÿródlowym)
+\usepackage[hidelinks]{hyperref}
+\usepackage{indentfirst}
+\usepackage{geometry}
+\usepackage{url}
+\usepackage{upgreek}
+\usepackage{graphicx}
+\usepackage[defaultlines=4,all]{nowidow}
+\usepackage{fancyhdr}
+
+\geometry{left=20mm, right=20mm, bindingoffset=10mm, top=25mm, bottom=25mm}
+
+\usepackage[final]{pdfpages}
+\usepackage{pdflscape}
+%\prefixing %notacja prefiksowa w pakiecie 'polski'
+\frenchspacing
+\linespread{1.2}
+
+\graphicspath{{./graf/}}
+\DeclareGraphicsExtensions{.jpeg,.png,.jpg}
+
+\numberwithin{equation}{section}
+
+\newcommand{\bb}[1]{\mathbf{#1}}
+
+\setnoclub
+\setnowidow
+
+\makeatletter
+\def\ps@pageNum{%
+    \def\@oddfoot{\null\hfill\thepage}
+    \def\@evenfoot{\thepage}%
+    \def\@evenhead{\null\hfil\slshape\leftmark}%
+    \def\@oddhead{{\slshape\rightmark}}}%
+\makeatother
+
+\pagestyle{pageNum}
+
+
+
+\begin{document}
+
+\begin{titlepage}
+\includepdf{Title_page.pdf}
+\end{titlepage}
+
+\thispagestyle{empty}
+\cleardoublepage
+
+%Streszczenie i s³owa kluczowe
+\thispagestyle{empty}
+\begin{center}
+\section*{Streszczenie}
+
+\vspace{0.4cm}
+\begin{large}\textbf{Analiza dynamiki mechanizmów p³askich we wspó³rzêdnych kanonicznych Hamiltona} \end{large} \\
+\end{center}
+
+\vspace{0.4cm}
+W niniejszej pracy przedstawiono problematykê analizy dynamiki mechanizmów p³askich we wspó³rzêdnych absolutnych (zale¿nych), których konsekwencj¹ jest otrzymanie uk³adu równañ ró¿niczkowo-algebraicznych (RRA). Przedstawiono wybrane podejœcia w rozwi¹zywaniu tych równañ i zaimplementowano cztery ró¿ne sformu³owania. Ka¿de kolejne sformu³owanie stanowi rozwiniêcie poprzedniego. Sformu³owania te przetestowano na przyk³adzie podwójnego wahad³a fizycznego, porównuj¹c wyniki otrzymane z symulacji z programem \emph{Adams}.
+
+Nastêpnie zaimplementowano p³aski mechanizm Andrews'a u¿ywaj¹c metody rozszerzonego lagnran¿janu i równañ kanonicznych Hamiltona.  Porównano u¿ycie jawnej metody ca³kuj¹cej bazuj¹cej na metodach Rungego-Kutty z metod¹ niejawn¹ trapezów. Omówiono wp³yw doboru parametrów modelu i parametrów symulacji na stabilnoœæ rozwi¹zania pod k¹tem spe³nienia równañ wiêzów dla po³o¿eñ i prêdkoœci oraz pod k¹tem odchylenie energii ca³kowitej. Wszystkie procedury zosta³y zaprogramowane w œrodowisku \emph{Matlab}. \\
+
+S³owa kluczowe: uk³ady wielocz³onowe, rozszerzony lagran¿jan, równania kanoniczne Hamiltona, równania ró¿niczkowo-algebraiczne, RRA, mechanizm Andrews'a
+
+\newpage
+\thispagestyle{empty}
+\begin{center}
+\section*{Summary}
+
+\vspace{0.4cm}
+\begin{large}\textbf{Dynamic analysis of planar multibody systems based on Hamilton's canonical coordinates} \end{large} \\
+\end{center}
+
+\vspace{0.4cm}
+The subject of the thesis is to present various aspects of dynamic analysis of planar multibody systems based on dependent coordinates. In consequence, a system of differential-algebraic equations (DAEs) has to be solved in order to predict the system state in the next time instant. Selected methods for DAE solution are presented in this thesis. Four approaches were implemented. Subsequent formulations are built on top of the previous one. Those four formulations were tested on double pendulum example. The collected results were compared against \emph{Adams} multibody software.
+
+Subsequently, Andrew’s squeezer mechanism is implemented using augmented Lagrangian and Hamilton's canonical equations. Comparison between explicit integrator based on Runge-Kutta methods and implicit trapezoidal rule was shown as well. Moreover, a discussion is presented on the influence of the simulation settings and penalty parameters on the solution's stability and accuracy in the context of constraint violation errors and total energy conservation. All procedures were developed in \emph{Matlab} software.\\
+
+Keywords: multibody systems, augmented Lagrangian, Hamilton's canonical equations, dif-ferential-algebraic equations, DAEs, Andrew’s squeezer mechanism
+
+
+\cleardoublepage
+\thispagestyle{empty}
+\begin{center} 
+{\bf Oœwiadczenie autora pracy}
+\end{center}
+\noindent Œwiadom odpowiedzialnoœci prawnej oœwiadczam, ¿e przedstawiona praca dyplomowa:
+
+\begin{itemize}
+\itemsep0em
+\item[-] zosta³a napisana przeze mnie samodzielnie i nie zawiera treœci uzyskanych w sposób niezgodny z obowi¹zuj¹cymi przepisami,
+\item[-] nie by³a wczeœniej przedmiotem procedur zwi¹zanych z uzyskaniem tytu³u zawodowego lub stopnia naukowego w wy¿szej uczelni.
+\end{itemize}
+
+Oœwiadczam ponadto, ¿e niniejsza wersja pracy jest identyczna z za³¹czon¹ wersj¹ elektroniczn¹.
+
+\vspace{2.5cm}
+\begin{tabular}[t]{ccc}
+............................................. & \hspace*{100pt} & .............................................\\
+\scriptsize{data} & \hspace*{150pt} & \scriptsize{podpis autora pracy}
+\end{tabular}
+\vspace{1cm}
+\begin{center} 
+\bf{Oœwiadczenie}
+\end{center}
+Wyra¿am zgodê {\slash} nie wyra¿am zgody $^($\footnote{niepotrzebne skreœliæ}$^)$ na udostêpnianie osobom zainteresowanym mojej pracy dyplomowej. Praca mo¿e byæ udostêpniana w pomieszczeniach biblioteki wydzia³owej. Zgoda na~udostêpnienie pracy dyplomowej nie oznacza wyra¿enia zgody na jej kopiowanie w~ca³oœci lub w czêœci.
+\newline Brak zgody nie oznacza ograniczenia dostêpu do pracy dyplomowej osób:
+\begin{enumerate}[nosep]
+\item[-] reprezentuj¹cych w³adze Politechniki Warszawskiej,
+\item[-] cz³onków Komisji Akredytacyjnych,
+\item[-] funkcjonariuszy s³u¿b pañstwowych i innych osób uprawnionych, na mocy odpowiednich przepisów prawnych obowi¹zuj¹cych na terenie Rzeczypospolitej Polskiej, do swobodnego dostêpu do materia³ów chronionych miêdzynarodowymi przepisami o prawach autorskich.
+\end{enumerate}
+ Brak zgody nie wyklucza tak¿e kontroli tekstu pracy dyplomowej w systemie antyplagiatowym.
+ 
+\vspace{2.5cm}
+\begin{tabular}[t]{ccc}
+............................................. & \hspace*{100pt} & .............................................\\
+\scriptsize{data} & \hspace*{150pt} & \scriptsize{podpis autora pracy}
+\end{tabular}
+
+\clearpage{\pagestyle{empty}\cleardoublepage}
+\setcounter{tocdepth}{2}
+\tableofcontents
+\addtocontents{toc}{\protect\thispagestyle{empty}}
+
+\clearpage{\pagestyle{empty}\cleardoublepage}
+\section{Wstêp}
+
+\subsection{Wprowadzenie}
+
+Analiza kinematyczna i dynamiczna uk³adów wielocz³onowych jest stosunkowo nowym obszarem rozwijanym w mechanice. Rozwój mocy obliczeniowej wspó³czesnych komputerów oraz specjalistycznego oprogramowania rozpowszechni³ metodê uk³adów wielocz³onowych zarówno w~obszarze badañ naukowych, jak i zastosowañ komercyjnych (przemys³ samochodowy, robotyka czy biomechanika).  We wszystkich tych obszarach wymagane jest, aby solvery zastosowane do obliczeñ uk³adów wielocz³onowych by³y mo¿liwie szybkie, uniwersalne i radzi³y sobie z trudnoœciami takimi jak:
+\begin{itemize}
+\item po³o¿enia osobliwe
+\item nieci¹g³oœci w dzia³aniu si³
+\item uk³ady z wysokimi czêstotliwoœciami w³asnymi
+\end{itemize}
+
+W zwi¹zku z rozwojem oprogramowania z graficznym interfejsem u¿ytkownika (GUI) standardem staje siê równie¿ budowa oprogramowania z interaktywnym interfejsem u¿ytkownika (zamiast trybu wsadowego). U¿ytkownik powinien mieæ mo¿liwoœæ wizualizacji przeprowadzanej symulacji (najlepiej w czasie rzeczywistym) oraz wp³ywania na przebieg symulacji (aplikowania kolejnych si³, kontroli nad stopniami swobody w trakcie symulacji, przerwania symulacji w razie wyst¹pienia pewnego zdarzenia). We wszystkich powy¿szych przypadkach niezbêdnym jest, aby stan uk³adu wielocz³onowego w kolejnych chwilach czasu by³ obliczony i wyœwietlony na ekranie mo¿liwie jak najszybciej.
+
+¯eby to osi¹gn¹æ, wymagane jest zastosowanie odpowiedniego sformu³owania zadania dynamiki oraz u¿ycie odpowiedniej metody numerycznej do ca³kowania równañ. Od doboru tych elementów zale¿eæ bêdzie m.in. mo¿liwy maksymalny krok ca³kowania, stabilnoœæ danego modelu i jego uniwersalnoœæ.
+
+W ostatnich latach rozwiniêto wiele nowych sformu³owañ zadania dynamiki dla uk³adów wielocz³onowych. W niniejszej pracy przytoczone zostan¹ metody bazuj¹ce na u¿yciu zale¿nych wspó³rzêdnych absolutnych. Konsekwencj¹ i istotn¹ wad¹ u¿ycia tych wspó³rzêdnych jest koniecznoœæ rozwi¹zywania uk³adu równañ ró¿niczkowo-algebraicznych (RRA). Zalet¹ - uniwersalnoœæ i mo¿liwoœæ algorytmizacji.
+
+\subsection{Przegl¹d piœmiennictwa}
+
+Kolejne sformu³owania opisane w pracy bazuj¹ na poprzednich i s¹ ich udoskonaleniem. Fundamentalne prace, do których odwo³uj¹ siê pozosta³e artyku³y to \cite{Bau} i \cite {1A}. Pierwsza praca dotyka problemu stabilizacji, z kolei w drugiej po raz pierwszy zaproponowano nowe zmienne stanu do opisu uk³adu mechanicznego, otrzymuj¹c kanoniczne równania ruchu. Praca \cite{0A} dla klasycznych równañ wprowadza ogóln¹ metodê kar, pozwalaj¹c¹ kontynuowaæ symulacjê nawet w przypadku wyst¹pienia po³o¿eñ osobliwych. W pracy \cite{3A} zaaplikowano tê metodê do równañ kanonicznych. Kolejnym udoskonaleniem jest zastosowanie metody rozszerzonego lagran¿janu, czyli dodanie do ogólnej metody kar procesu iteracyjnego. Schemat postêpowania i korzyœci z takie podejœcia (zarówno dla równañ klasycznych i kanonicznych) pokazano w artykule \cite{2A}. Praca \cite{4A} rozszerza \cite{2A} o dodanie procesu iteracyjnego Newtona-Raphsona i zastosowanie metody trapezów jako procedury ca³kuj¹cej, co znacz¹co poprawia stabilnoœæ i dok³adnoœæ rozwi¹zania.
+
+\subsection{Cel pracy}
+
+Celem pracy jest porównanie ró¿nych sformu³owañ zadania prostego dynamiki dla uk³adów wielocz³onowych i stworzenie solvera uniwersalnego, zdolnego poradziæ sobie z szerok¹ palet¹ problemów. Sformu³owania które zostan¹ omówione to kolejno:
+\begin{itemize}
+\item klasyczne równania Newtona-Eulera (wraz ze stabilizacj¹, wykorzystuj¹ce nieoznaczone mno¿niki Lagrange'a)
+\item kanoniczne równania ruchu (wyprowadzone z równania Hamiltona, wraz ze stabilizacj¹, wykorzystuj¹ce nieoznaczone mno¿niki Lagrange'a)
+\item równania kanoniczne wraz z metod¹ rozszerzonego lagran¿janu i jawn¹ metod¹ ca³kowania
+\item równania kanoniczne wraz z metod¹ rozszerzonego lagran¿janu i niejawn¹ metod¹ ca³kowania (z iteracjami Newtona-Raphsona)
+\end{itemize}
+
+Jako przyk³ad testowy do powy¿szych metod pos³u¿y podwójne wahad³o fizyczne.
+Parametrem, który pos³u¿y do okreœlenia stabilnoœci ka¿dej z metod, bêdzie energia ca³kowita uk³adu. Ka¿de kolejne sformu³owanie jest rozwiniêciem poprzedniego.
+
+W kolejnym rozdziale zaprezentowane zostanie u¿ycie sformu³owañ bazuj¹cych na rozszerzonym lagran¿janie do przeprowadzenia symulacji zadania prostego dynamiki mechanizmu Andrews'a (pochodz¹cemu z biblioteki \cite{bench}). Mechanizm ten nie nadaje siê do ca³kowania standardowymi, jawnymi procedurami ca³kuj¹cymi (z racji wysokiej sztywnoœci), st¹d zastosowana zostanie procedura niejawna - \emph{A-stabilna} metoda trapezów.
+
+Wszystkie procedury dla poszczególnych sformu³owañ zosta³y zaprogramowane z u¿yciem œrodowsika \emph{Matlab}.
+
+\clearpage{\pagestyle{empty}\cleardoublepage}
+\section{Modelowanie uk³adów p³askich we wspó³rzêdnych absolutnych} \label{absolutne}
+\subsection{Sformu³owanie wiêzów kinematycznych} \label{absolutne}
+
+Metodyka wyprowadzenia równañ opisanych w tym rozdziale bêdzie zgodna z opisem zastosowanym podrêcznikach \cite{KDSMS} i \cite{DUW}.
+
+Do modelowania uk³adów dynamicznych mo¿na u¿yæ 3 rodzajów wspó³rzêdnych:
+\begin{itemize}
+\item wsp. z³¹czowe
+\item wsp. absolutne
+\item wsp. naturalne
+\end{itemize}
+
+
+Pokrótce omówione zostan¹ wspó³rzêdne absolutne. Nale¿¹ one do wspó³rzêdnych bezwzglêdnych, czyli takich, które okreœlaj¹ po³o¿enie i~orientacjê lokalnego uk³adu wspó³rzêdnych wzglêdem globalnego uk³adu odniesienia. Aby w pe³ni opisaæ dany uk³ad wielocz³onowy, z ka¿dym cz³onem trzeba zwi¹zaæ jeden uk³ad lokalny. Do pe³nego opisu po³o¿enia cz³onu w przestrzeni potrzeba 6 wspó³rzêdnych (3 wspó³rzêdne opisuj¹ce po³o¿enie i~3 opisuj¹ce orientacje). Na p³aszczyŸnie wystarcz¹ 3 wspó³rzêdne (2 wspó³rzêdne opisuj¹ce po³o¿enie i~1 okreœlaj¹ca orientacjê). Zatem dla ka¿dego cz³onu \emph{i} mechanizmu mo¿emy zdefiniowaæ wektor wspó³rzêdnych absolutnych $\bb{q}_i$ postaci:
+\begin{equation} \label{wekq}
+\bb{q}_i=\begin{bmatrix}
+x_i \\ y_i \\ \varphi_i
+\end{bmatrix}
+\end{equation}
+
+Uk³ad wielocz³onowy sk³adaj¹cy siê z \emph{n} cz³onów zbudowany jest zatem z wektora wspó³rzêdnych uogólnionych absolutnych \textbf{q} sk³adaj¹cego siê z 3\emph{n} elementów postaci:
+
+\begin{equation}
+\bb{q}=\begin{bmatrix} \label{globq}
+\bb{q}_1 \\ \bb{q}_2 \\ \vdots \\ \bb{q}_n
+\end{bmatrix}
+\end{equation}
+
+Tak skonstruowany wektor jednoznacznie okreœla po³o¿enie i orientacjê wszystkich cz³onów mechanizmu. Zaletami stosowania wspó³rzêdnych absolutnych jest: ³atwa rozszerzalnoœæ mechanizmu, prosta postaæ macierzy Jacobiego (podczas liczenia pochodnych cz¹stkowych w równaniu opisuj¹cym dany wiêz mog¹ wyst¹piæ tylko wspó³rzêdne cz³onów ³¹czonych przez ten wiêz), mo¿liwoœæ budowy programu komputerowego dla mechanizmu o dowolnej budowie. Wad¹ powy¿szego sformu³owania pozostaje fakt, ¿e wiêzy te s¹ zale¿ne, nawet wtedy, gdy uk³ad wielocz³onowy nie posiada zamkniêtych pêtli kinematycznych.
+
+Równanie wiêzów niezale¿nych w sposób jawny od czasu mo¿na zapisaæ w postaci:
+\begin{equation} \label{eqWiezy}
+\bb{\Phi(q)=0}
+\end{equation}
+
+W dalszej czêœci pracy bêd¹ rozpatrywane jedynie wiêzy holonomiczne postaci (\ref{eqWiezy}).
+
+Budowa przyk³adowego równania wiêzów zostanie przedstawiona dla pary obrotowej.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{para_obrotowa}
+\caption{Schemat pary obrotowej}
+\end{figure}
+
+Wektorowe równanie wiêzów dla pary obrotowej przyjmuje postaæ:
+\begin{equation} \label{paraObrotowa}
+\bb{\Phi}^{po} =  \bb{r}_i + \bb{R}_i \bb{s}_i - (\bb{r}_j+\bb{R}_j \bb{s}_j)=\bb{0}
+\end{equation}
+
+Gdzie $\bb{r}_i$ to wektor po³o¿enia uk³adu \emph{i} w uk³adzie globalnym, $\bb{R}_i$ to macierz transformacji uk³adu \emph{i} do uk³adu globalnego, a $\bb{s}_i$ to wektor wskazuj¹cy na parê obrotow¹ w uk³adzie lokalnym \emph{i}. Powy¿sza para obrotowa ³¹czy ze sob¹ cz³ony \emph{i}-ty z \emph{j}-tym.
+
+Macierz Jacobiego $\bb{\Phi}_q$ dla uk³adu wielocz³onowego powi¹zanego wieloma parami obrotowymi mo¿na zbudowaæ z macierzy pochodnych cz¹stkowych, uzyskanych po zró¿niczkowaniu równañ wiêzów.
+Pochodne cz¹stkowe wiêzów $\bb{\Phi}^{po}$ opisanych powy¿szym równaniem mo¿na obliczyæ w~postaci macierzowej:
+\begin{equation} \label{J1}
+\bb{\Phi}_{\bb{r}_i}^{po}=\bb{I}_{2x2}
+\end{equation}
+
+\begin{equation}
+\bb{\Phi}_{\phi_i}^{po}=\bb{\Omega}\bb{R}_i \bb{s}_i
+\end{equation}
+
+\begin{equation}
+\bb{\Phi}_{\bb{r}_j}^{po}=-\bb{I}_{2x2}
+\end{equation}
+
+\begin{equation} \label{J4}
+\bb{\Phi}_{\phi_j}^{po}=-\bb{\Omega}\bb{R}_j \bb{s}_j
+\end{equation}
+
+Gdzie macierz $\bb{\Omega}$ to:
+\begin{equation}
+\bb{\Omega}=
+\begin{bmatrix}
+0 & -1 \\
+1 & 0
+\end{bmatrix}
+\end{equation}
+
+Dla równañ wiêzów (\ref{eqWiezy}) pierwsz¹ pochodn¹ po czasie mo¿na obliczyæ ze wzoru:
+\begin{equation} \label{dWiezy}
+\bb{\dot{\Phi}}=\bb{\Phi}_\bb{q} \bb{\dot{q}}=\bb{0}
+\end{equation}
+
+Mo¿na zatem policzyæ dla pary obrotowej (dla czytelnoœci zapisu pominiêto $po$ w indeksie górnym):
+\begin{equation} \label{eq:01}
+\begin{aligned}
+\bb{\Phi}_\bb{q} \bb{\dot{q}} =& \bb{\Phi}_{\bb{q}_i} \bb{\dot{q}}_i + \bb{\Phi}_{\bb{q}_j} \bb{\dot{q}}_j =
+\bb{\Phi}_{\bb{r}_i} \bb{\dot{r}}_i + \bb{\Phi}_{\varphi_i} \dot{\varphi}_i + 
+\bb{\Phi}_{\bb{r}_j} \bb{\dot{r}}_j + \bb{\Phi}_{\varphi_j} \dot{\varphi}_j = \\
+ =& \bb{\dot{r}}_i + \bb{\Omega}\bb{R}_i \bb{s}_i \dot{\varphi}_i -
+	\bb{\dot{r}}_j - \bb{\Omega}\bb{R}_j \bb{s}_j \dot{\varphi}_j
+\end{aligned}
+\end{equation}
+
+Dla wiêzów (\ref{eqWiezy}) zachodzi:
+\begin{equation} \label{dJacobi}
+\bb{\dot{\Phi}}_\bb{q} = (\bb{\Phi}_\bb{q} \bb{\dot{q}})_\bb{q}
+\end{equation}
+
+Pochodna po czasie macierzy Jacobiego bêdzie niezbêdna w sformu³owaniu równañ kanonicznych.
+
+Ró¿niczkuj¹c cz¹stkowo równanie (\ref{eq:01}) mo¿na otrzymaæ:
+\begin{equation} \label{dJ1}
+\bb{(\Phi}_\bb{q} \bb{\dot{q})}_{\bb{r}_i} = \bb{0}_{2x2}
+\end{equation}
+\begin{equation}
+\bb{(\Phi}_\bb{q} \bb{\dot{q})}_{\phi_i} = \bb{\Omega\Omega}\bb{R}_i \bb{s}_i \dot{\varphi}_i 
+= - \bb{R}_i \bb{s}_i \dot{\varphi}_i
+\end{equation}
+\begin{equation}
+\bb{(\Phi}_\bb{q} \bb{\dot{q})}_{\bb{r}_j} = \bb{0}_{2x2}
+\end{equation}
+\begin{equation} \label{dJ4}
+\bb{(\Phi}_\bb{q} \bb{\dot{q})}_{\varphi_j} = -\bb{\Omega\Omega}\bb{R}_j \bb{s}_j \dot{\varphi}_j 
+= \bb{R}_j \bb{s}_j \dot{\varphi}_j
+\end{equation}
+
+Skorzystano z równania:
+\begin{equation}
+\bb{\Omega\Omega} = - \bb{I}_{2x2}
+\end{equation}
+
+Druga pochodna wiêzów (\ref{eqWiezy}) po czasie przyjmuje postaæ:
+\begin{equation}
+\bb{\ddot{\Phi}}=\bb{\Phi}_\bb{q} \bb{\ddot{q}} + (\bb{\Phi}_\bb{q} \bb{\dot{q}})_\bb{q} \bb{\dot{q}}
+\end{equation}
+
+Powy¿sze równanie mo¿na zapisaæ w postaci:
+\begin{equation} \label{ddWiezy}
+\bb{\Phi}_\bb{q} \bb{\ddot{q}} = \bb{\Gamma}
+\end{equation}
+
+Gdzie:
+\begin{equation}
+\bb{\Gamma} = - (\bb{\Phi}_\bb{q} \bb{\dot{q}})_\bb{q} \bb{\dot{q}}
+\end{equation}
+Wektor $\bb{\Gamma}$ niezbêdny bêdzie w sformu³owaniu klasycznych równañ ruchu Newtona.
+
+Dla pary obrotowej wektor $\bb{\Gamma}$ mo¿na policzyæ ze wzoru:
+\begin{equation}
+\begin{aligned}
+\bb{\Gamma} =& - (\bb{\Phi}_\bb{q} \bb{\dot{q}})_\bb{q} \bb{\dot{q}} = 
+- \bb{(\Phi}_\bb{q} \bb{\dot{q})}_{\bb{r}_i} \bb{\dot{r}}_i - \bb{(\Phi}_\bb{q} \bb{\dot{q})}_{\varphi_i} \dot{\varphi}_i
+- \bb{(\Phi}_\bb{q} \bb{\dot{q})}_{\bb{r}_j} \bb{\dot{r}}_j - \bb{(\Phi}_\bb{q} \bb{\dot{q})}_{\varphi_j} \dot{\varphi}_j \\
+=& - \bb{\Omega\Omega}\bb{R}_i \bb{s}_i \dot{\varphi}_i^2
++ \bb{\Omega\Omega}\bb{R}_j \bb{s}_j \dot{\varphi}_j^2 =
+\bb{R}_i \bb{s}_i \dot{\varphi}_i^2
+- \bb{R}_j \bb{s}_j \dot{\varphi}_j^2
+\end{aligned}
+\end{equation}
+
+\subsection{Sformu³owanie równañ dynamiki} \label{sfRówDyn}
+
+Równania dynamiki dla konkretnego \emph{i}-tego cz³onu w przestrzeni przyjmuj¹ postaæ (\emph{i}-ty uk³ad wspó³rzêdnych zaczepiony jest w œrodku masy \emph{i}-tego cz³onu):
+\begin{itemize}
+\item Równanie Newtona, które opisuje ruch postêpowy:
+\begin{equation} \label{eqNewton}
+\bb{F}_i=m_i\bb{\ddot{r}}_c
+\end{equation}
+
+Gdzie: \begin{itemize}
+\item $\bb{F}_i$ to wektor si³y wypadkowej przy³o¿onej do \emph{i}-tego cz³onu
+\item $m_i$ jest mas¹ \emph{i}-tego cz³onu
+\item wektor $\bb{\ddot{r}}_c$ jest wektorem wodz¹cym \emph{i}-tego uk³adu wspó³rzêdnych w uk³adzie globalnym (inercjalnym) 
+\end{itemize} 
+
+\item Równanie Eulera, opisuj¹ce ruch obrotowy \emph{i}-tego cz³onu sztywnego:
+\begin{equation} \label{eqEuler}
+\bb{M}^i=\bb{J}_c^i \bm{\dot{\upomega}}_{0,i} + \bm{\widetilde{\upomega}}_{0,i} \bb{J}_c^i \bm{\upomega}_{0,i}
+\end{equation}
+
+Gdzie:\begin{itemize}
+\item $\bb{M}^i$ oznacza ca³kowity moment przy³o¿ony do \emph{i}-tego cz³onu
+\item $\bb{J}_c^i$ oznacza macierz bezw³adnoœci \emph{i}-tego cz³onu liczon¹ wzglêdem œrodka masy i~w~kierunku osi \emph{i}-tego uk³adu wspó³rzêdnych
+\item $\bm{\widetilde{\upomega}}_{0,i}$ to macierz stowarzyszona z wektorem prêdkoœci k¹towej $\bm{\upomega}_{0,i}$ \emph{i}-tego uk³adu wspó³rzêdnych wzglêdem uk³adu globalnego 
+\end{itemize} 
+Wszystkie wielkoœci zapisane s¹ w \emph{i}-tym uk³adzie zwi¹zanym z cz³onem, dziêki czemu macierz $\bb{J}_c^i$ jest sta³a.
+\end{itemize}
+
+Rozwa¿ane dalej bêd¹ p³askie uk³ady wielocz³onowe, dlatego powy¿sze równania przyjm¹ prostsz¹ postaæ. W dalszych rozwa¿aniach przyjêto, ¿e ruch uk³adu odbywaæ bêdzie siê w~p³aszczyŸnie XY oraz ¿e si³y czynne przy³o¿one bêd¹ w p³aszczyŸnie XY. Oznacza to, ¿e:
+\begin{equation}
+\bb{F}=\begin{bmatrix}
+F_x \\ F_y \\ 0
+\end{bmatrix}, \quad
+\bb{M}=\begin{bmatrix}
+0 \\ 0 \\ M_z
+\end{bmatrix}, \quad
+\bb{r}_c=\begin{bmatrix}
+x_c \\ y_c \\ 0
+\end{bmatrix}, \quad
+\bb{\upomega}_{0,i}=\begin{bmatrix}
+0 \\ 0 \\ \dot{\varphi}_i
+\end{bmatrix}
+\end{equation}
+
+Podstawiaj¹c powy¿sze do równania Newtona (\ref{eqNewton}) otrzymaæ mo¿na:
+\begin{equation}
+m\begin{bmatrix}
+\ddot{x_c} \\ \ddot{y_c} \\ 0
+\end{bmatrix} = \begin{bmatrix}
+F_x \\ F_y \\ 0
+\end{bmatrix}
+\end{equation}
+
+Z kolei równanie Eulera (\ref{eqEuler}) mo¿na zapisaæ w postaci:
+\begin{equation}
+\begin{bmatrix}
+-J_{xz} \ddot{\varphi} + J_{yz} \dot{\varphi}^2 \\
+-J_{yz} \ddot{\varphi} - J_{xz} \dot{\varphi}^2 \\
+J_{zz} \ddot{\varphi}
+\end{bmatrix}=\begin{bmatrix}
+0 \\ 0 \\M_z
+\end{bmatrix}
+\end{equation}
+
+Pierwsze dwa równania nie s¹ spe³nione to¿samoœciowo. ¯eby tak siê sta³o, to oba momenty dewiacyjne $J_{xz}=J_{yz}=0$. Wynika z tego fakt, ¿e cz³on p³aski w ogólnym przypadku nie porusza siê ruchem p³askim pod wp³ywem p³askiego uk³adu si³ i momentów. P³aski ruch cz³onu wynika z wiêzów narzuconych przez pary kinematyczne. W momencie, kiedy nie jest spe³nione powy¿sze równanie lub œrodek masy cz³onu nie le¿y w p³aszczyŸnie ruchu, to pojawi¹ siê si³y reakcji dzia³aj¹ce poza p³aszczyzn¹ ruchu. Si³y te jednak w przypadku braku tarcia nie maj¹ wp³ywu na rozwi¹zanie zadania dynamiki, dlatego w dalszej czêœci bêd¹ pomijane.
+
+Wobec powy¿szych faktów równanie ruchu \emph{i}-tego cz³onu p³askiego mo¿na zapisaæ w formie:
+\begin{equation} \label{rówDyn}
+\begin{bmatrix}
+m_i & 0 & 0 \\
+0 & m_i & 0 \\
+0 & 0 & J_{zz_i}
+\end{bmatrix} \begin{bmatrix}
+\ddot{x}_c \\ \ddot{y}_c \\ \ddot{\varphi}
+\end{bmatrix}
+= \begin{bmatrix}
+F_{x_i} \\ F_{y_i} \\ M_{z_i}
+\end{bmatrix}, \qquad
+\bb{M}_i \bb{\ddot{q}}_i = \bb{Q}_i
+\end{equation}
+
+Dla \emph{n} cz³onów p³askich równanie dynamiki mo¿na zapisaæ w wektorowej formie:
+\begin{equation} \label{global}
+\bb{M} = \begin{bmatrix}
+\bb{M}_1 & 0 & 0 \\
+0 & \ddots & 0 \\
+0 & 0 & \bb{M}_n
+\end{bmatrix}, \qquad
+\bb{q}= \begin{bmatrix}
+\bb{q}_1 \\ \vdots \\ \bb{q}_n
+\end{bmatrix}, \qquad
+\bb{Q}= \begin{bmatrix}
+\bb{Q}_1 \\ \vdots \\ \bb{Q}_n
+\end{bmatrix}
+\end{equation}
+\begin{equation} \label{eqDynamika}
+\bb{M}\bb{\ddot{q}} = \bb{Q}
+\end{equation}
+Gdzie $\bb{M}$ to macierz masowa uk³adu, $\bb{q}$ to wektor wspó³rzêdnych uogólnionych, $\bb{Q}$ to wektor si³ uogólnionych.
+
+\subsection{Sformu³owanie równañ dynamiki dla cz³onów skrêpowanych wiêzami z~u¿yciem nieoznaczonych mno¿ników Lagrange'a}
+
+Wektor si³ wypadkowych mo¿na roz³o¿yæ na si³y aktywne $\bb{Q}^A$ i si³y reakcji pochodz¹ce od wiêzów $\bb{Q}^R$ zgodnie ze wzorem:
+\begin{equation} \label{eq:02}
+\bb{Q}=\bb{Q}^A + \bb{Q}^R
+\end{equation}
+
+Wektor $\bb{\delta q}$ to wektor przesuniêæ wirtualnych (zgodnych z wiêzami). Licz¹c ró¿niczkê zupe³n¹ równania wiêzów (\ref{eqWiezy}) otrzymaæ mo¿na:
+\begin{equation} \label{eq:dWiezy}
+\bb{\Phi}_\bb{q} \bb{\delta q} = \bb{0}
+\end{equation}
+
+Dla wiêzów idealnych (beza tarcia) zachodzi:
+\begin{equation} \label{eq:03}
+\bb{\delta q}^T \bb{Q}^R = 0
+\end{equation}
+
+Oznacza on, ¿e wektor si³ reakcji jest ortogonalny do wektora przesuniêæ wirtualnych (praca si³ reakcji jest zerowa). Równanie (\ref{eqDynamika}) po przeniesieniu na lew¹ stronê i pomno¿eniu lewostronnie przez $\bb{\delta q}^T$ przyjmuje postaæ:
+\begin{equation} \label{eq:04}
+\bb{\delta q}^T (\bb{M}\bb{\ddot{q}} - \bb{Q}) = 0
+\end{equation}
+
+Po uwzglêdnieniu równañ (\ref{eq:02}) i (\ref{eq:03}) w równaniu (\ref{eq:04}) mo¿na zapisaæ:
+\begin{equation} \label{eq:05}
+\bb{\delta q}^T (\bb{M}\bb{\ddot{q}} - \bb{Q}^A) = 0
+\end{equation}
+
+Transponuj¹c równanie (\ref{eq:dWiezy}) mo¿na zapisaæ:
+\begin{equation}
+(\bb{\Phi}_\bb{q} \bb{\delta q})^T = \bb{\delta q}^T \bb{\Phi}_\bb{q}^T = \bb{0}^T
+\end{equation}
+
+Mo¿na wprowadziæ wektor $\bm{\uplambda}$, który bêdzie oznaczaæ wektor nieoznaczonych mno¿ników Lagrange'a. Mno¿¹c powy¿sze równanie prawostronnie przez wektor $\bm{\uplambda}$ otrzymaæ mo¿na:
+\begin{equation}
+\bb{\delta q}^T \bb{\Phi}_\bb{q}^T \bm{\uplambda} = 0
+\end{equation}
+
+Dodaj¹c powy¿sze równanie do równania (\ref{eq:05}) zachodzi:
+\begin{equation}
+\bb{\delta q}^T (\bb{M}\bb{\ddot{q}} - \bb{Q}^A + \bb{\Phi}_\bb{q}^T \bm{\uplambda}) = 0
+\end{equation}
+
+Wektor $\bb{\delta q}$ jest niezerowy, zatem z powy¿szego równania wynika, ¿e zerowy musi byæ drugi wektor powy¿szego iloczynu, co prowadzi do:
+\begin{equation} \label{eqLam}
+\bb{M}\bb{\ddot{q}}  + \bb{\Phi}_\bb{q}^T \bm{\uplambda} = \bb{Q}^A
+\end{equation}
+
+Równanie to opisuje dynamikê uk³adu \emph{n} cz³onów skrêpowanych wiêzami, gdzie sk³adnik $\bb{\Phi}_\bb{q}^T \bm{\uplambda}$ mo¿na interpretowaæ jako si³y reakcji.
+
+W powy¿szym równaniu niewiadomymi s¹ wektory $\bb{\ddot{q}}$ i $\bm{\uplambda}$. W celu uzyskania pe³nego opisu ruchu, nale¿y do³o¿yæ do powy¿szego równania równanie wiêzów (\ref{eqWiezy}) otrzymuj¹c:
+\begin{equation} \label{DYNAMIKA}
+\begin{cases} 
+\bb{M}\bb{\ddot{q}}  + \bb{\Phi}_\bb{q}^T \bm{\uplambda} = \bb{Q}^A \\
+\bb{\Phi(q)=0}
+\end{cases}
+\end{equation}
+
+Zgodnie z \cite{KDSMS} (s.262-263) powy¿sze sformu³owanie to uk³ad równañ ró¿niczkowo-algebraicznych (RRA) o indeksie 3 . Sformu³owanie to bêdzie punktem wyjœciowym dla dalszych sformu³owañ.
+
+\clearpage{\pagestyle{empty}\cleardoublepage}
+\section{Metody ca³kowania równañ ró¿niczkowych zwyczajnych (RRZ)}
+
+\subsection{Podzia³ algorytmów ca³kowania numerycznego}
+Zgodnie z \cite{KDSMS} (s.243-247) metody ca³kowania mo¿na podzieliæ wed³ug ró¿nych kryteriów:
+\begin{enumerate}
+\item rzêdu metody
+\item liczby odwo³añ do przesz³oœci: \begin{itemize}
+\item metody jednokrokowe - rozwi¹zanie w nastêpnym kroku zale¿y od wartoœci funkcji prawej strony $f$ w kroku bie¿¹cym - metody te s¹ samostartuj¹ce
+\item metody wielokrokowe - wykorzystywane s¹ wartoœci rozwi¹zania (i/lub wartoœci funkcji prawej strony $f$) z kilku poprzednich kroków - metody te nie s¹ samostartuj¹ce
+\end{itemize}
+\item jawnoœci: \begin{itemize}
+\item metody jawne - w kroku $k+1$ nie odwo³uj¹ siê do wielkoœci wyznaczanej
+\item metody niejawne - w kroku $k+1$ odwo³uj¹ siê w sposób uwik³any do wielkoœci wyznaczanej $y_{k+1}$
+\end{itemize}
+\end{enumerate}
+
+\subsection{Sformu³owanie problemu}
+Uk³ad równañ ró¿niczkowych zwyczajnych mo¿na zapisaæ w formie:
+\begin{equation} \label{RRZ}
+\bb{\dot{y}} = \bb{f}(t,\bb{y})
+\end{equation}
+
+Wraz z zadan¹ wartoœci¹ $\bb{y}_0$
+Powy¿sze równanie s³u¿y do obliczenia wartoœci wektora pochodnej funkcji wektorowej $\bb{\dot{y}}$  w chwili $t$ dla znanych wartoœci $\bb{y}$. 
+
+Niech $t_k$ oznacza chwilê czasu $t$ w kroku $k$. Wtedy $\Delta t = t_{k+1} - t_k$ oraz $\bb{y}_k = \bb{y}(\bb{t}_k)$
+Za³ó¿my, ¿e funkcja $\bb{f}$ jest ró¿niczkowalna odpowiedni¹ liczbê razy wzglêdem $t$ i $\bb{y}$. W celu aproksymacji wartoœci funkcji $\bb{y}(t_{k+1})$ mo¿na pos³u¿yæ siê wzorem Taylora:
+\begin{equation} \label{Taylor}
+\bb{y}_{k+1} = \bb{y}_k + \Delta t \bb{y}_k^{(1)} + \dfrac{\Delta t^2}{2!} \bb{y}_k^{(2)} + ...
+\end{equation}
+
+Gdzie:
+\begin{align} \label{pochodne}
+&\bb{y}^{(1)} = \bb{\dot{y}} = \bb{f} \\
+\nonumber &\bb{y}^{(2)} = \bb{\dot{f}} = \bb{f}_t + \bb{f}_y \bb{f}
+\end{align}
+$$\vdots$$
+
+Zauwa¿yæ mo¿na, ¿e powy¿sze wyra¿enie zapisaæ mo¿na w zale¿noœci od funkcji $\bb{f}$ i jej kolejnych pochodnych. Dla dostatecznie ma³ego kroku ca³kowania $h=\Delta t$ cz³ony wy¿szych rzêdów mog¹ zostaæ zaniedbane. Otrzymana w ten sposób formu³a jest najprostszym schematem ca³kowania, powszechnie znanym jako jawny schemat Eulera:
+\begin{equation} \label{jawnyEuler}
+\bb{y}_{k+1} = \bb{y}_k + h \bb{f}_k
+\end{equation}
+
+Na podstawie powy¿szej metody ca³kowania omówione zostan¹ podstawowe problemy spotykane podczas rozwi¹zywania RRZ metodami przybli¿onymi. Przyj¹æ mo¿na, ¿e funkcja $y(t)$ bêdzie od teraz funkcj¹ jednej zmiennej.
+
+\begin{enumerate}
+\item \emph{Zgodnoœæ} - dotyczy ró¿nicy pomiêdzy rozwi¹zaniem œcis³ym i przybli¿onym w chwili $t=t_{k+1}$. Za³ó¿my, ¿e $y_k$ jest rozwi¹zaniem dok³adnym. Ró¿nicê $e(h)$ pomiêdzy rozwi¹zaniem œcis³ym i przybli¿onym pope³nianym w \emph{k}-tym kroku nazywa siê lokalnym b³êdem ca³kowania. Metoda ca³kowania jest zgodna wtedy i tylko wtedy, gdy:
+\begin{equation}
+\lim\limits_{h\to 0} e(h) = 0
+\end{equation}
+Dla metody jawnej Eulera $e(h) = \dfrac{1}{2}h^2\mbox{y}^{"}(t_k + \theta)$, gdzie $\theta \in (t_k ; t_{k+1})$. Widaæ, ¿e spe³nione jest powy¿szy warunek.
+
+\item \emph{Rz¹d dok³adnoœci} - oznaczany przez $r$. Metoda ca³kowania jest $r$ rzêdu wtedy i~tylko wtedy gdy:
+\begin{equation}
+e(h) = Ch^{r+1} + o(h^{r+1}), \quad C \neq 0, \quad \lim\limits_{h\to 0} \dfrac{o(h^{r+1})}{h^{r+1}} = 0
+\end{equation}
+Zauwa¿yæ mo¿na, ¿e metoda Eulera jest \emph{1.} rzêdu. Rz¹d metody wp³ywa na dok³adnoœæ oszacowañ wartoœci funkcji $y(t)$ w kolejnych krokach.
+
+\item \emph{Zbie¿noœæ} - mo¿na j¹ zdefiniowaæ jako w³asnoœæ metody, która gwarantuje, ¿e najwiêksze wystêpuj¹ce odchylenie rozwi¹zania przybli¿onego od rozwi¹zania œcis³ego mo¿e byæ dostatecznie ma³e (a w granicy d¹¿yæ do $0$) przy odpowiednim doborze kroku ca³kowania $h$. Innymi s³owy - nie nastêpuje kumulacja b³êdów pope³nianych w ka¿dym kolejnym kroku ca³kowania. 
+
+Równanie $\dot{y}=f(t,y)$ bêdzie rozwi¹zywane w przedziale $t\in(t_0 ; t_0+T)$. Jako $E(h)$ oznaczyæ mo¿na globalny b³¹d ca³kowania:
+\begin{equation}
+E(h) = \max\limits_{0<k\leq n} | y(t_0 + kh) - y_k |
+\end{equation}
+Metoda jest z definicji zbie¿na wtedy i tylko wtedy gdy:
+\begin{equation}
+\lim\limits_{h\to 0} E(h) = 0
+\end{equation}
+\item \emph{Stabilnoœæ} - prawdziwe jest stwierdzenie, ¿e zgodnoœæ + stabilnoœæ = zbie¿noœæ.
+
+Stabilnoœæ poszczególnych metod bada siê rozwi¹zuj¹c problem testowy:
+\begin{equation} \label{eqProbTest}
+f(t,y) = \dot{y} = \lambda y, \quad y(0) = Y_0
+\end{equation}
+
+Gdzie $\lambda = \lambda_R + i \lambda_i$ jest liczb¹ zespolon¹. Rozwi¹zanie analityczne powy¿szego problemu prezentuje siê nastêpuj¹co:
+\begin{equation}
+y(t) = Y_0 e^{\lambda t} = Y_0 e^{\lambda_R t} (\cos \lambda_I t + i \sin \lambda_I t)
+\end{equation}
+Je¿eli: 
+\begin{equation} \label{zachowanie}
+\lambda_r < 0 \qquad \mbox{to} \qquad \lim\limits_{h\to 0} |y(t)| = 0
+\end{equation}
+\end{enumerate}
+
+\newpage
+\subsection{Rodzaje stabilnoœci numerycznej}
+Zagadnienie testowe determinuje rodzaj stabilnoœci danego algorytmu ca³kowania. Wyró¿niæ mo¿na 2 rodzaje stabilnoœci. Ka¿dy rodzaj stabilnoœci bêdzie przedstawiony na przyk³adzie konkretnych metod ca³kowania.
+\begin{enumerate}
+\item \emph{Stabilnoœæ warunkowa} - najmniej restrykcyjny rodzaj stabilnoœci. Metoda ca³kowania jest warunkowo stabilna, je¿eli jest stabilna dla pewnego zakresu wartoœci $h \lambda$. W takich metodach, krok czasowy $h$ powinien byæ dobrany w zale¿noœci od problemu, scharakteryzowanego przez parametr $\lambda$. Metody stabilne mog¹ byæ zatem u¿ywane, je¿eli \emph{a priori} znany jest zakres wielkoœci $\lambda$ dla konkretnego problemu. Co ciekawe, istniej¹ metody stabilne warunkowo, dla których zmniejszenie kroku ca³kowania $h$ powoduje wypadniêcie z obszaru stabilnoœci (metody BDF3+). Pokazaæ mo¿na, ¿e schemat jawny Eulera jest warunkowo stabilny. Stosuj¹c go do rozwi¹zania problemu testowego (\ref{eqProbTest}) otrzymuje siê ci¹g liczb zespolonych opisanych regu³¹:
+\begin{equation}
+y_{k+1} = y_k + h f_k = y_k + h \lambda y_k = y_k (1+h\lambda)
+\end{equation}
+Zatem kolejne wartoœci opisane s¹ wzorem:
+\begin{equation}
+y_k = Y_0 (1+h \lambda)^k
+\end{equation}
+Otrzymany ci¹g w odpowiedni sposób odwzoruje zachowanie rozwi¹zania dok³adnego (\ref{zachowanie}), gdy jego granica bêdzie wynosiæ 0 dla $k \rightarrow  \infty$. Warunek ten bêdzie spe³niony wtedy i tylko wtedy, gdy $|1+h\lambda|<1$, co oznacza, ¿e liczba zespolona $h\lambda$ musi na p³aszczyŸnie zespolonej nale¿eæ do wnêtrza okrêgu o promieniu 1 i œrodku w punkcie $(-1,0)$.
+
+\item \emph{Stabilnoœæ absolutna (A-stabilnoœæ)} - s¹ to algorytmy, których rozwi¹zanie numeryczne problemu (\ref{eqProbTest}) zbiega do zera, gdy spe³niony jest warunek (\ref{zachowanie}), co oznacza, ¿e rozwi¹zanie numeryczne d¹¿y do zera jeœli tylko odpowiadaj¹ce mu rozwi¹zanie œcis³e d¹¿y do zera. Obszar stabilnoœci algorytmów \emph{A-stabilnych} na p³aszczyŸnie zespolonej musi obejmowaæ lew¹ pó³p³aszczyznê, wraz z osi¹ urojon¹ \emph{Im}. 
+
+Najwa¿niejsz¹ cech¹ algorytmów \emph{A-stabilnych} jest brak wp³ywu doboru kroku ca³kowania $h$ na stabilnoœæ procesu ca³kowania. Cecha ta jest niezmiernie wa¿na przy ca³kowaniu równañ dynamiki uk³adów wielocz³onowych, poniewa¿ jedynym kryterium przy doborze kroku ca³kowania $h$ pozostaje wtedy zapewnienie wystarczaj¹cej dok³adnoœci. Metody \emph{A-stabilne} s¹ niezast¹pione przy ca³kowaniu uk³adów sztywnych, dla których oœ urojona \emph{Im} musi byæ czêœci¹ obszaru zbie¿noœci.
+
+Zgodnie z teori¹, liniowa niejawna metoda \emph{A-stabilna} mo¿e byæ co najwy¿ej 2. rzêdu. W~dalszej czêœci omówione zostan¹ 2 metody \emph{A-stabilne}:
+\begin{itemize}
+\item niejawny schemat Eulera
+\item metoda trapezów
+\end{itemize}
+\end{enumerate}
+
+\subsection{Niejawny schemat Eulera}
+
+Niejawny schemat Eulera przedstawia siê nastêpuj¹co
+\begin{equation}
+y_{k+1} = y_k + h f(t_{k+1},y_{k+1})
+\end{equation}
+
+Warto zauwa¿yæ, ¿e algorytm ten odwo³uje siê w sposób uwik³any do wielkoœci wyznaczanej $y_{k+1}$, zatem je¿eli funkcja $f(t,y)$ jest nieliniowa, konieczne w ka¿dym kroku staje siê znajdowanie rozwi¹zania w procesie iteracyjnym (np. Newtona-Raphsona). Niejawny schemat Eulera jest równie¿ $1.$ rzêdu.
+
+Niejawny schemat Eulera zastosowany do problemu testowego stabilnoœci (\ref{eqProbTest}) zwraca ci¹g rekurencyjny:
+\begin{equation}
+y_{k+1} = y_k + h\lambda y_{k+1}
+\end{equation}
+
+Po przekszta³ceniach mo¿na zapisaæ wzór jawny na kolejne wartoœci:
+\begin{equation} \label{niejEuler}
+y_{k+1} = \dfrac{1}{(1-h \lambda)^k} Y_0
+\end{equation}
+
+Otrzymany ci¹g w odpowiedni sposób odwzoruje zachowanie rozwi¹zania dok³adnego (\ref{zachowanie}), gdy jego granica bêdzie wynosiæ 0 dla $k \rightarrow  \infty$. Warunek ten bêdzie spe³niony wtedy i tylko wtedy, gdy $\dfrac{1}{|1+h\lambda|} \leqslant 1$, co jest to¿same $|h\lambda - 1| \geqslant 1$. \\
+Warunek ten oznacza, ¿e liczba zespolona $h\lambda$ musi na p³aszczyŸnie zespolonej le¿eæ poza okrêgiem o promieniu 1 i œrodku w punkcie $(1,0)$. Zatem niejawny schemat Eulera jest \emph{A-stabilny}, poniewa¿ do obszaru zbie¿noœci (\ref{niejEuler}) nale¿y lewa pó³p³aszczyzna p³aszczyzny zespolonej wraz z osi¹ \emph{Im}. 
+
+\subsection{Metoda trapezów} \label{trapezy}
+
+Metoda trapezów (zwana równie¿ metod¹ Cranka-Nicholsona) przedstawia siê wzorem:
+\begin{equation} \label{eqtrapezy}
+y_{k+1} = y_k + \dfrac{h}{2} (f_k + f_{k+1})
+\end{equation}
+
+Metoda trapezów jest metod¹ $2.$ rzêdu. Mo¿na o niej myœleæ, jak o œredniej arytmetycznej jawnego i niejawnego schematu Eulera. Zastosowana do problemu (\ref{eqProbTest}) daje rezultat:
+\begin{equation}
+y_{k+1} = y_k + \dfrac{h}{2} \lambda (y_k + y_{k+1})
+\end{equation}
+
+Po przekszta³ceniu wzór jawny na kolejne wartoœci ma postaæ:
+\begin{equation}
+y_{k+1} = \left(\dfrac{1+\frac{h\lambda}{2}}{1-\frac{h\lambda}{2}} \right)^k Y_0
+\end{equation}
+
+Otrzymany ci¹g w odpowiedni sposób odwzoruje zachowanie rozwi¹zania dok³adnego (\ref{zachowanie}), gdy jego granica bêdzie wynosiæ 0 dla $k \rightarrow  \infty$. Warunek ten bêdzie spe³niony wtedy i tylko wtedy, gdy $\dfrac{1+\frac{h\lambda}{2}}{1-\frac{h\lambda}{2}} \leqslant 1$, co jest to¿same $|h\lambda +2| \leqslant |h\lambda - 2| $. \\
+Warunek ten oznacza, ¿e liczba zespolona $h\lambda$ musi na p³aszczyŸnie zespolonej le¿eæ w odleg³oœci mniejszej b¹dŸ równej punktowi $(-2,0)$ ni¿ punktowi $(2,0)$. Zbiorem rozwi¹zañ tej nierównoœci jest lewa pó³p³aszczyzna zespolona, zatem metoda trapezów jest \emph{A-stabilna}.
+
+Dziêki temu, ¿e metoda obejmuje oœ urojon¹ \emph{Im}, jest odpowiednia do ca³kowania uk³adów oscylacyjnych bez t³umienia. Ponadto zgodnie z \cite{KDSMS} metoda trapezów jest najbardziej dok³adn¹ metod¹ \emph{A-stabiln¹} z rodziny algorytmów Newmark'a. Jej wa¿n¹ w³asnoœci¹ jest zachowywanie energii ca³kowitej uk³adu liniowego (takiego którego równania stanu maj¹ postaæ $\bb{\dot{y}}= \bb{Ay}$ gdzie macierz $\bb{A}$ jest sta³a).
+
+Metoda trapezów dla uk³adów nieliniowych mo¿e utraciæ \emph{A-stabilnoœæ}. W \cite{KDSMS} (s.257-258) dowiedziono, ¿e dzieje siê tak dla nieliniowego równania skalarnego $\dot{y} = \lambda(y) y$. Gdy $\lambda_k > \lambda_{k+1}$ metoda trapezów staje siê warunkowo stabilna z warunkiem $h \leqslant \dfrac{4}{\lambda_k - \lambda_{k+1}}$. Sposobem na rozwi¹zanie tego problemu mo¿e byæ: 
+\begin{itemize}
+\item zastosowanie metody punktu œrodkowego: $t_{k+\frac{1}{2}}= t_k + \dfrac{h}{2}, \quad y_{k+1}= y_k + h f_{k+\frac{1}{2}}$
+\item wprowadzenie wiêzów na energiê
+\item wprowadzenie sztucznego t³umienia w trakcie procesu ca³kowania
+\end{itemize} 
+
+\subsection{Metody Rungego-Kutty} \label{RK}
+
+S¹ to jawne (ERK) lub niejawne (IRK) metody jednokrokowe. Aby osi¹gn¹æ wy¿szy rz¹d zgodnie ze wzorem (\ref{Taylor}) nale¿a³oby w ka¿dej chwili czasu obliczaæ funkcjê $f(t,y)$ wraz z jej pochodnymi zgodnie z (\ref{pochodne}). G³ówn¹ ide¹ metod RK jest osi¹gniêcie wymaganego rzedu metody poprzez wielokrotne wywo³ywanie funkcji prawych stron $f$. Wyprowadzenie metod poszczególnych rzêdów bazuje na wzorze Taylora (\ref{Taylor}). Oszczêdza siê w ten sposób czasoch³onnego wyliczania pochodnych wysokich rzêdów funkcji $f$. Najbardziej popularny wariantem powy¿szych metod jest metoda $4.rzêdu$ znana jako RK4 postaci:
+\begin{align}
+\ y_{k+1} =& y_k + \dfrac{1}{6} (K_1 + 2K_2 + 2K_3 + K_4) \\
+\nonumber K_1 =& h f(t_k,y_k) \\
+\nonumber K_2 =& h f(t_k+ \dfrac{h}{2},y_k + \frac{1}{2} K_1) \\
+\nonumber K_3 =& h f(t_k+ \dfrac{h}{2},y_k + \frac{1}{2} K_2) \\
+\nonumber K_4 =& h f(t_k+ h,y_k + K_3)
+\end{align}
+
+Zgodnie z powy¿szym funkcja prawej strony $f(t,y)$ obliczana jest 4 razy. W metodach rzêdów wiêkszych od 4 liczba wywo³añ funkcji $f$ jest wiêksza od rzêdu (np. dla RK5 jest to 6 wywo³añ). Bardzo popularn¹ procedur¹ ca³kuj¹c¹ z adaptacj¹ rzêdu, bazuj¹c¹ na rodzinie metod Rungego-Kutty, jest procedura \emph{Matlaba} \emph{ode45}, która zostanie wykorzystana w dalszej czêœci pracy.
+
+Widaæ, ¿e kolejne wyra¿enia $K_i$ mog¹ byæ obliczone jawnie w ka¿dym kroku. W przypadku schematu niejawnego równania na kolejne wspó³czynniki przyjmuj¹ postaæ:
+\begin{align} \label{IRK}
+&K_i = f(t_k + c_i h, y_k + h \sum\limits_{j=1}^r \alpha_{ij} K_j) \\
+\nonumber &y_{k+1} = y_k + h \sum\limits_{i=1}^r \beta_i K_i
+\end{align}
+
+Niejawne metody Rungego-Kutty s¹ stabilniejsze i dok³adniejsze od jawnych odpowiedników (metody $2r$ rzêdu s¹ \emph{A-stabilne}). Jednak¿e (z wyj¹tkiem metody trapezów), s¹ du¿o trudniejsze w implementacji i kosztowniejsze w u¿yciu.
+
+\subsection{Krótkie omówienie metod wielokrokowych}
+
+G³ównym celem u¿ycia metod wielokrokowych jest zwiêkszenie rzêdu metody (a wiêc i dok³adnoœci) poprzez siêganie w \emph{k-tym} kroku do $p$ kroków wstecz. Wspó³czynniki $\alpha_i$ i $\beta_i$ wyprowadzane s¹ metod¹ interpolacji (AM) lub ekstrapolacji (AB) wielomianowej, b¹dŸ nieoznaczonych wspó³czynników (na podstawie wzoru Taylora \ref{Taylor}). Ogólny wzór tych metod wygl¹da nastêpuj¹co:
+\begin{equation}
+y_{k+1} = \sum\limits_{i=0}^p \alpha_i y_{k-i} + h \sum\limits_{i=-1}^p \beta_i f_{k-i}
+\end{equation}
+Je¿eli $\beta_{-1}=0$, to metoda jest jawna.
+G³ówne rodziny metod wielokrokowych to: 
+\begin{enumerate}
+
+\item Metody Adamsa-Bashfortha - metody jawne:
+\begin{equation}
+y_{k+1} =  y_k + h \sum\limits_{i=0}^p \beta_i f_{k-i}
+\end{equation}
+Warto zauwa¿yæ, ¿e metoda AB 1. rzêdu to schemat jawny Eulera.
+
+\item Metody Adamsa-Moultona - metody niejawne:
+\begin{equation}
+y_{k+1} =  y_k + h \sum\limits_{i=-1}^p \beta_i f_{k-i}
+\end{equation}
+Analogicznie mo¿na zauwa¿yæ, ¿e metoda AM 1. rzêdu to schemat niejawny Eulera. Z kolei metoda AM 2. rzêdu to metoda trapezów.
+
+\item Metody wstecznego ró¿niczkowania (BDF) - równie¿ metody niejawne
+\begin{equation} \label{BDF}
+y_{k+1} = \sum\limits_{i=0}^p \alpha_i y_{k-i}  + h f_{k+1}
+\end{equation}
+
+Metody BDF s¹ przeznaczone do ca³kowania uk³adów sztywnych z powodów numerycznych (wysokie czêstoœci w³asne s¹ szybko wyt³umiane, drgania o niskich czêstoœciach trwaj¹ du¿o d³u¿ej). Metody BDF s¹ $L-stabilne$ - czyli takie, których obszar stabilnoœci zawiera obszar $Re(h \lambda) < -\eta$, gdzie $\eta > 0$.
+\end{enumerate}
+
+Istotnymi zaletami metod wielokrokowych jest ich prostota i szybkoœæ (uzyskanie wysokiego rzêdu jest obliczeniowo tanie w porównaniu z metodami RK). Wadami jest koniecznoœæ zainicjowania, problemy ze zmian¹ kroku ca³kowania w trakcie procesu ca³kowania oraz warunkowa stabilnoœæ (ponadto obszar stabilnoœci pomniejsza siê wraz ze wzrostem rzêdu metody).
+
+\newpage 
+\subsection{Idea metod predyktor-korektor}
+
+Jeœli problem nie jest sztywny, dobrym pomys³em okazuje siê po³¹czenie jawnych metod AB z niejawnymi AM o tym samym rzêdzie. Za pomoc¹ metody jawnej przewiduje siê rozwi¹zanie w kroku $k+1$, które nastêpnie aplikuje siê w metodzie niejawnej. Dla schematu Eulera wygl¹da to nastêpuj¹co:
+\begin{align}
+\widehat{y}_{k+1} &= y_k + h f(t_k,y_k)& &- \mbox{predykcja} \\
+\nonumber y_{k+1} &= y_k + h (f,t_{k+1} , \widehat{y}_{k+1})& &- \mbox{korekcja}
+\end{align}
+
+Etap korekcji mo¿na zamkn¹æ w procesie iteracyjnym, jednak¿e zbie¿noœæ tego procesu jest liniowa. Zastosowanie predyktora liniowego jako przybli¿enia startowego dla procesu Newtona-Raphsona, który ma zbie¿noœæ kwadratow¹, jest lepszym rozwi¹zaniem.
+
+\vspace{1cm}
+Na rysunku poni¿ej przedstawiono zestawienie algorytmów ca³kowania numerycznego obecnych w \emph{Matlabie}:
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{matlab_metody_calk}
+\caption{Metody ca³kowania numerycznego zaimplementowane w œrodowisku \emph{Matlab}}
+\end{figure}
+
+\clearpage{\pagestyle{empty}\cleardoublepage}
+\section{Problematyka rozwi¹zywania równañ RRA}
+
+\subsection{Podstawowe pojêcia}
+Zgodnie z równaniem (\ref{DYNAMIKA}) konsekwencj¹ u¿ycia wspó³rzêdnych zale¿nych w modelowaniu uk³adów wielocz³onowych jest koniecznoœæ rozwi¹zania uk³adu równañ ró¿niczkowo-algebraicznych (RRA). Wyró¿nia siê dwie postacie równañ RRA:
+\begin{itemize}
+\item postaæ niejawna:
+\begin{equation} \label{RRAniej}
+\bb{F}(t,\bb{y},\bb{\dot{y}}) = \bb{0}, \qquad \bb{y}(t_0) = \bb{Y}_0
+\end{equation}
+
+Gdzie macierz $\bb{F}_{\dot{y}}$ mo¿e byæ osobliwa.
+
+\item postaæ pó³jawna:
+\begin{align}
+\bb{\dot{y}} &=\bb{f}(t,\bb{z},\bb{y}) \\
+\nonumber \bb{0} &=\bb{g}(t,\bb{z},\bb{y}) \\
+\nonumber \bb{z}(t_0)&=\bb{Z}_0, \qquad \bb{y}(t_0)=\bb{Y}_0
+\end{align}
+
+\end{itemize}
+
+Równanie ({\ref{DYNAMIKA}) jest w postaci pó³jawnej.
+
+Teoria rozwi¹zywania równañ RRA, w przeciwieñstwie do równañ ró¿niczkowych zwyczajcnych (RRZ), nie jest kompletna i wci¹¿ pozostaje tematem badañ. Rozwi¹zanie RRA mo¿e nie istnieæ, a je¿eli istnieje mo¿e nie byæ jedynym rozwi¹zaniem. Ciê¿ko te¿ znaleŸæ solvery ogólnego przeznaczenia, które by³yby odpowiednie od szerokiej klasy problemów. 
+
+W przypadku równañ RRA bardzo wa¿nym pojêciem jest \emph{indeks ró¿niczkowy RRA}. Jest to liczba ró¿niczkowañ wzglêdem czasu równania (\ref{RRAniej}) jakie trzeba wykonaæ aby otrzymaæ uk³ad równañ ró¿niczkowych zwyczajnych postaci (\ref{RRZ}). Im wy¿szy jest indeks równania, tym wiêcej problemów sprawia ca³kowanie numeryczne tego równania. W osobnym podrozdziale zostan¹ omówione najbardziej intuicyjne metody rozwi¹zywania równañ RRA.
+
+\subsection{Uk³ady sztywne} \label{sztywne}
+
+Uk³ady sztywne (inaczej Ÿle uwarunkowane) opisane s¹ przez równania ró¿niczkowe zawieraj¹ce cz³ony wp³ywaj¹ce na szybk¹ zmiennoœæ rozwi¹zania. Rozwi¹zanie tych równañ standardowymi metodami (nawet pomimo zastosowania ma³ego kroku ca³kowania) mo¿e byæ niestabilne.
+
+Dany jest uk³ad fizyczny scharakteryzowany poprzez zmienne stanu $\bb{y}$. Uk³ad ten (liniowy jednorodny) jest opisany w zmiennych stanu równaniem:
+\begin{equation}
+\bb{\dot{y}} = \bb{A} \bb{y}
+\end{equation}
+
+Gdzie $\bb{A}$ to macierz o sta³ych wspó³czynnikach, któr¹ mo¿na przedstawiæ w pewnej bazie w~postaci:
+\begin{equation} \label{decomp}
+\bb{A}=\bb{C} \bm{\uplambda} \bb{C^{-1}}
+\end{equation}
+
+Gdzie $\bm{\uplambda}$ to macierz diagonalna wartoœci w³asnych uk³adu:
+\begin{equation}
+\bm{\uplambda} = \begin{bmatrix}
+\lambda_1 & 0 & 0 \\
+0 & \ddots & 0 \\
+0 & 0 & \lambda_n
+\end{bmatrix}
+\end{equation}
+
+Oznaczyæ mo¿na $\lambda(\bb{A}) = {\lambda_1, \cdots ,\lambda_n}$ jako zbiór wartoœci w³asnych macierzy $\bb{A}$.
+Uk³ad fizyczny jest sztywny z powodów fizycznych gdy:
+\begin{align}
+&Re \lambda(\bb{A}) \subset \{a : a <0 \} \\
+\nonumber &\dfrac{\max(|\lambda_1|, \cdots, |\lambda_n|)}{\min(|\lambda_1|, \cdots, |\lambda_n|)} \gg 1
+\end{align}
+
+Uk³ady RRA wykazuj¹ w³aœciwoœci RRZ Ÿle uwarunkowanych. Do ca³kowania uk³adów sztywnych wskazane s¹ metody \emph{A-stabilne}. Do ca³kowaniu uk³adów Ÿle uwarunkowanych, ale przy tym o du¿ym t³umieniu $(Re(\lambda) \ll 0)$ dedykowane s¹ algorytmy \emph{L-stabilne} (np. BDF).
+ 
+ 
+\subsection{Wybrane podejœcia w rozwi¹zywaniu RRA} \label{podejœciaRRA}
+\begin{enumerate}
+\item Rozwi¹zywanie bezpoœrednie równañ o indeksie 3.
+
+Polega na zaaplikowaniu niejawnych schematów ca³kowania Rungego-Kutty (\ref{IRK}) b¹dŸ schematów BDF (\ref{BDF}) do równania (\ref{DYNAMIKA}).
+
+\begin{equation}
+\bb{v} = \bb{\dot{q}}
+\end{equation}
+
+\begin{itemize}
+\item U¿ycie schematu BDF
+
+Mo¿na przekszta³ciæ równania (\ref{BDF}) w celu wyznaczenia pochodnych w kroku $k$:
+\begin{align}
+\bb{\dot{q}}_{k+1} = \dfrac{1}{h\beta_0} (\bb{q}_{k+1} - \sum\limits_{i=0}^p \alpha_i \bb{q}_{k-i}) \\
+\nonumber \bb{\dot{v}}_{k+1} = \dfrac{1}{h\beta_0} (\bb{v}_{k+1} - \sum\limits_{i=0}^p \alpha_i \bb{q}_{k-i})
+\end{align}
+
+Powy¿sze formu³y mo¿na teraz bezpoœrednio wstawiæ do równañ (\ref{DYNAMIKA}) otrzymuj¹c nieliniowy uk³ad równañ algebraicznych, który mo¿na rozwi¹zaæ u¿ywaj¹c np. metody Newtona-Raphsona. Udowodniono, ¿e metody BDF \emph{k}-krokowe, o sta³ym kroku $h$, s¹ zbie¿ne i stabilne do rzêdu $o(h^k)$ je¿eli wartoœci pocz¹tkowe s¹ wystarczaj¹co dok³adne. W rozwi¹zywaniu takiego sformu³owania wystêpuj¹ jednak znacz¹ce trudnoœci numeryczyne: 
+\begin{itemize}
+\item Macierz u¿yta w iteracjach Newtona-Raphsona staje siê Ÿle uwarunkowana dla ma³ego kroku czasowego $h$.
+
+\item Nag³e zmiany w zmiennych i wiêzach mog¹ skutkowaæ niestabilnoœci¹ rozwi¹zania (metoda BDF próbuje dopasowaæ wielomian w punkcie takiej nieci¹g³oœci). Krok czasowy $h$ musi zostaæ wtedy zmniejszony, co z kolei skutkuje poprzednim problemem. Nieci¹g³oœci mog¹ zostaæ ominiête, poprzez reinicjalizacjê procesu ca³kowania ze spójnymi warunkami pocz¹tkowymi, uzyskanymi ze zró¿niczkowania równania wiêzów (\ref{eqWiezy}). Reinicjalizacja jest bardzo kosztowna czasowo.
+
+\item Metody wielokrokowe nie s¹ samostartuj¹ce. Metoda \emph{k-krokowa} wymaga $k-1$ wystarczaj¹co dok³adnych rozwi¹zañ, które musz¹ byæ uzyskane inn¹ metod¹. Metoda wielokrokowa jest zatem silnie wra¿liwa od dok³adnoœci metody inicjuj¹cej.
+\end{itemize}
+
+\item U¿ycie schematu IRK
+
+Równania (\ref{IRK}) mo¿na zaaplikowaæ do równania dynamiki (\ref{DYNAMIKA}):
+\begin{align}
+&\bb{M}(\bb{q}_k + h \sum\limits_{j=1}^r \alpha_{ij} \bb{K}_j) \bb{L}_i = \bb{Q}_{k+1} - \bb{\Phi}_\bb{q}^T(\bb{q}_k + h \sum\limits_{j=1}^r \alpha_{ij} \bb{K}_j) \bm{\uplambda}_{k+1} \\
+\nonumber &\bb{\Phi}(tk+c_i h, \bb{q}_k + h \sum\limits_{j=1}^r \alpha_{ij} \bb{K}_j) = \bb{0} \\
+\nonumber &\bb{K}_i=v_k + h \sum\limits_{j=1}^r \alpha_{ij} \bb{L}_j \\
+\nonumber &i=1,\ldots ,r
+\end{align}
+Gdzie $\bb{L}_i$ to pochodne poœrednie prêdkoœci $\bb{v} = \bb{\dot{q}}$. Niewiadomymi w powy¿szym wyra¿eniu s¹ $\bb{K}_i$, $\bb{L}_i$ oraz $\bm{\uplambda}$.
+
+Takie podejœcie w rozwi¹zywaniu równania dynamiki RRA (\ref{DYNAMIKA}):\begin{itemize}
+\item Lepiej radzi sobie z nieci¹g³oœciami wspó³rzêdnych i wiêzów, poniewa¿ metoda IRK jest jednokrokowa.
+\item Schemat IRK jest samostartuj¹cy, wystarcz¹ warunki pocz¹tkowe w chwili $t_0$.
+\item Zmniejszenie kroku czasowego nie powoduje z³ego uwarunkowania macierzy u¿ywanej w iteracjach N-R
+\end{itemize} 
+Niestety otrzymany uk³ad równañ jest wiêkszy, bardziej skomplikowany, a macierz u¿ywana w iteracjach N-R trudniejsza do policzenia.
+
+\end{itemize}
+
+\item Obni¿enie indeksu RRA
+
+Obni¿yæ indeks równañ dynamiki RRA mo¿na uzyskaæ poprzez zró¿niczkowanie równania wiêzów (\ref{eqWiezy}):
+\begin{itemize}
+\item jednokrotne (\ref{dWiezy}) - otrzymuj¹c RRA o indeksie 2.
+\item dwukrotne (\ref{ddWiezy}) - otrzymuj¹c RRA o indeksie 1.
+\end{itemize} 
+
+Równanie dynamiki o indeksie 1. mo¿na przedstawiæ w postaci:
+\begin{equation} \label{NEU1}
+\begin{bmatrix}
+\bb{M} & \bb{\Phi}_\bb{q}^T \\
+\bb{\Phi}_\bb{q} & \bb{0}
+\end{bmatrix}
+\begin{bmatrix}
+\bb{\ddot{q}} \\ \bm{\uplambda}
+\end{bmatrix} =
+\begin{bmatrix}
+\bb{Q} \\ \bb{\Gamma}
+\end{bmatrix}
+\end{equation}
+
+Powy¿sze równanie mo¿na rozwi¹zywaæ algorytmami dedykowanymi dla RRZ. Niestety, przy takim sformu³owaniu wystêpuje efekt naruszenia wiêzów dla prêdkoœci i po³o¿eñ. Potrzebny jest mechanizm utrzymuj¹cy wiêzy dla po³o¿eñ i prêdkoœci pod kontrol¹ - tym mechanizmem jest stabilizacja wiêzów.
+
+\item Redukcja do wspó³rzêdnych niezale¿nych
+
+Pomys³ bazuje na u¿yciu macierzy transformacji  $\bb{R}$ i uzyskaniu minimalnej liczby wspó³rzêdnych uogólnionych niezale¿nych. Zgodnie z równaniem (\ref{dWiezy}) wektor $\bb{\dot{q}}$ nale¿y do j¹dra przekszta³cenia liniowego opisanego przez macierz Jacobiego $\bb{\Phi}_\bb{q}$. Rozmiar podprzestrzeni j¹dra wynosi $f$. 
+\begin{equation}
+\dim(Ker(\bb{\Phi}_\bb{q})) = f
+\end{equation}
+
+Gdzie $f$ to równie¿ liczba stopni swobody mechanizmu. Wektor $\bb{\dot{q}}$ mo¿na przedstawiæ jako kombinacjê liniow¹ wektorów podprzestrzeni j¹dra w postaci:
+\begin{equation} \label{niezale¿ne}
+\bb{\dot{q}} = \bb{R \dot{z}}
+\end{equation}
+
+Gdzie kolumny macierzy $\bb{R}$ to wektory bazowe podprzestrzeni j¹dra macierzy Jacobiego $\bb{\Phi}_\bb{q}$. Zgodnie z tym zachodzi równanie:
+\begin{equation}
+\bb{\Phi}_\bb{q} \bb{R} = \bb{0}, \quad \bb{R}^T \bb{\Phi}_\bb{q}^T = \bb{0}^T
+\end{equation}
+
+Macierz $\bb{R}$ mo¿na uzyskaæ z macierzy Jacobiego $\bb{\Phi}_\bb{q}$ poprzez faktoryzacjê LU, dekompozycjê z macierz¹ diagonaln¹ zgodnie z (\ref{decomp}) lub poprzez rozk³ad QR. Podstawienie równania (\ref{niezale¿ne}) do pierwszego równana (\ref{DYNAMIKA}) i pomno¿enie lewostronne przez $\bb{R}^T$ prowadzi do:
+\begin{equation}
+\bb{R}^T\bb{M} \bb{R} \bb{\ddot{z}} = \bb{R}^T \bb{Q}
+\end{equation}
+\end{enumerate}
+
+\clearpage{\pagestyle{empty}\cleardoublepage}
+\section{Wybrane sformu³owania zadania prostego dynamiki}
+
+\subsection{Równania Newtona-Eulera wraz ze stabilizacj¹ Baumgarte'a} \label{NewEul}
+
+Równania te oparte s¹ na przyspieszeniach $\bb{\ddot{q}}$. Konsekwencj¹ tego, jest koniecznoœæ dwukrotnego ró¿niczkowania równania wiêzów (\ref{eqWiezy}). Zamiast rozpatrywaæ równanie wiêzów postaci $\bb{\ddot{\Phi}} = \bb{0}$, mo¿na rozpatrywaæ równanie postaci:
+\begin{equation}
+\bb{\ddot{\Phi}} + 2\xi \omega \bb{\dot{\Phi}} + \omega^2 \bb{\Phi} = \bb{0}
+\end{equation}
+
+Pomys³ pochodzi z pracy \cite{Bau}. Powy¿sze równanie jest analogiczne do liniowego równania drgañ t³umionych. Uk³ad równañ (\ref{NEU1}) przyjmuje teraz postaæ:
+\begin{equation} \label{BAUMGART}
+\begin{bmatrix}
+\bb{M} & \bb{\Phi}_\bb{q}^T \\
+\bb{\Phi}_\bb{q} & \bb{0}
+\end{bmatrix}
+\begin{bmatrix}
+\bb{\ddot{q}} \\ \bm{\uplambda}
+\end{bmatrix} =
+\begin{bmatrix}
+\bb{Q} \\ \bb{\Gamma} - 2\xi \omega \bb{\Phi}_\bb{q} \bb{\dot{q}} - \omega^2 \bb{\Phi}
+\end{bmatrix}
+\end{equation}
+Gdzie wektor $\bb{q}$ ma rozmiar $n$, a wektor $\bm{\uplambda}$ ma rozmiar $m$.
+
+\vspace{0.5cm}
+\paragraph{Algorytm rozwi¹zywania zadania prostego dynamiki} 
+\begin{enumerate}
+\item Zadanie warunków pocz¹tkowych (wektorów $\bb{q}_0$ i $\bb{\dot{q}}_0$) spe³niaj¹cych równania wiêzów dla po³o¿eñ (\ref{eqWiezy}) i prêdkoœci (\ref{dWiezy}). 
+\item Konstrukcja wektora:
+\begin{equation}
+\bb{Y}_0 = \begin{bmatrix}
+\bb{q}_0 \\ \bb{\dot{q}}_0
+\end{bmatrix}
+\end{equation}
+\item Stworzenie funkcji $\bb{H}$ takiej ¿e:
+\begin{equation} \label{funH}
+\bb{\dot{Y}} = \bb{H}(\bb{Y})
+\end{equation}
+Powy¿sza funkcja dzia³a nastêpuj¹co: \begin{itemize}
+\item Wczytanie aktualnego czasu i wektora $\bb{Y}$
+\item Obliczenie macierzy i wektorów wystêpuj¹cych w (\ref{BAUMGART}) i rozwi¹zanie tego uk³adu równañ o rozmiarze $m+n$. Do rozwi¹zania powy¿szego uk³adu równañ dobrze jest u¿yæ algorytmów dedykowanych dla macierzy rzadkich.
+\item Podstawienie:
+\begin{equation}
+\bb{\dot{Y}} = \begin{bmatrix}
+\bb{\dot{q}}\\ \bb{\ddot{q}}
+\end{bmatrix}
+\end{equation}
+\end{itemize}
+
+\item U¿ycie wybranej jawnej procedury ca³kuj¹cej.
+\end{enumerate}
+
+Do rozwi¹zywania wszystkich uk³adów równañ liniowych postaci $\bb{Ax}=\bb{b}$ u¿yto polecenia \emph{Matlaba} postaci $\bb{x}=\bb{A \backslash b}$. Do ca³kowania powy¿szego równania zastosowano procedurê \emph{ode45}. Zapewnia ona doœæ dobr¹ dok³adnoœæ przy odpowiednio ma³ym kroku. Nie nale¿y jej jednak u¿ywaæ bez stabilizacji wiêzów, poniewa¿ nie zabezpiecza ona przed niekontrolowanym przyrostem energii ca³kowitej.
+
+Powy¿sze sformu³owanie jest proste i skuteczne, jednak nie radzi sobie z problemami, z~którymi radziæ bêd¹ sobie kolejne sformu³owania. Ponadto stabilizacja odbywa siê kosztem niedok³adnoœci w wiêzach dla przyspieszeñ.
+
+\subsection{Kanoniczne równania ruchu wraz ze stabilizacj¹} \label{KanRów}
+
+Funkcja Lagrange'a $L$ dla uk³adu mechanicznego przyjmuje postaæ:
+\begin{equation} \label{lag}
+L=T-V
+\end{equation}
+
+Gdzie $T$ to energia kinetyczna uk³adu, a $V$ to energia potencjalna. Równania ruchu Lagrange'a mo¿na przedstawiæ w postaci:
+\begin{equation}
+\dfrac{d}{dt} \left( \dfrac{\partial L}{\partial \bb{\dot{q}}} \right)^T - \left( \dfrac{\partial L}{\partial \bb{q}} \right)^T + \bb{\Phi}_\bb{q}^T\bm{\uplambda} = \bb{P}
+\end{equation}
+
+Gdzie $\bb{P}$ to wektor si³ niezachowawczych czynnych. Powy¿sze równania w ogólnoœci s¹ to¿same pierwszemu równaniu z (\ref{DYNAMIKA}).
+
+Funkcja Hamiltona $H$ dla uk³adu mechanicznego przyjmuje postaæ:
+\begin{equation}
+H=\bb{p}^T\bb{\dot{q}} - L
+\end{equation}
+
+Gdzie $\bb{p}$ to wektor pêdów uogólnionych. Kanoniczne równania ruchu zdefiniowane s¹ jako: \begin{align} \label{rówKan}
+\bb{\dot{q}} &= \left(\dfrac{\partial H}{\partial \bb{p}} \right)^T \\
+\nonumber -\bb{\dot{p}} &= \left(\dfrac{\partial H}{\partial \bb{q}} \right)^T - \bb{P} + \bb{\Phi}_\bb{q}^T\bm{\uplambda}
+\end{align}
+
+Mo¿na powy¿sze równania zapisaæ w formie:
+\begin{equation}
+\begin{cases}
+\bb{p} = \bb{M} \bb{\dot{q}} \\
+\bb{\dot{p}} = L_\bb{q}^T + \bb{P} - \bb{\Phi}_\bb{q}^T\bm{\uplambda}
+\end{cases}
+\end{equation}
+
+Powy¿sze równania wraz z równaniem wiêzów (\ref{eqWiezy}) prowadz¹ do uk³adu równañ ró¿niczkowo-algebraicznych o wymiarze $2n+m$. Zadanie to jest wiêksze od sformu³owania klasycznego, jednak wyjœciowy indeks RRA w tym wypadku ma indeks 2, co jest korzystniejsze z numerycznego punktu widzenia.
+
+Zgodnie z pomys³em z \cite{1A} wprowadziæ mo¿na zmodyfikowan¹ funkcjê Lagrange'a, uwzglêdniaj¹c w niej wiêzy na prêdkoœci:
+\begin{equation}
+\widehat{L} = L + \bb{\dot{\Phi}}^T \bm{\upsigma}
+\end{equation}
+
+Zmodyfikowane równanie Hamiltona przedstawia siê teraz nastêpuj¹co:
+\begin{equation} \label{newHam}
+\widehat{H}=\bb{p}^T\bb{\dot{q}} - \widehat{L}
+\end{equation}
+
+Nowe pêdy uogólnione $\bb{\widehat{p}}$ przyjmuj¹ postaæ:
+\begin{equation} \label{pêdyNowe}
+\begin{cases}
+\bb{\widehat{p}} = \bb{M} \bb{\dot{q}} + \bb{\Phi}_\bb{q}^T \bm{\upsigma} \\
+\bb{\widehat{\dot{p}}} = L_\bb{q}^T + \bb{P} + \bb{\dot{\Phi}}_\bb{q}^T \bm{\upsigma}
+\end{cases}
+\end{equation}
+
+Ze zró¿niczkowania pierwszego z powy¿szych równañ mo¿na pokazaæ, ¿e:
+\begin{equation} \label{lam2sig}
+\bm{\uplambda} = \bm{\dot{\upsigma}}
+\end{equation}
+
+Równania (\ref{pêdyNowe}) nale¿y rozpatrywaæ wraz z równaniami wiêzów dla po³o¿eñ (ze stabilizacj¹ wiêzów dla po³o¿eñ):
+\begin{equation}
+\bb{\dot{\Phi}} + \gamma \bb{\Phi} = \bb{\Phi}_\bb{q} \bb{\dot{q}} + \gamma \bb{\Phi} =\bb{0}
+\end{equation}
+
+Mo¿na równie¿ dodaæ dodatkowy warunek ca³kowy otrzymuj¹c:
+\begin{equation}
+\bb{\dot{\Phi}} + 2\xi \omega \bb{\Phi} + \omega^2 \int\limits_{t_0}^t \bb{\Phi}d\tau = \bb{0}
+\end{equation}
+W ka¿dym kroku czasowym konieczne jest rozwi¹zanie uk³adu równañ postaci:
+\begin{equation} \label{KANONICZNE}
+\begin{bmatrix}
+\bb{M} & \bb{\Phi}_\bb{q}^T \\
+\bb{\Phi}_\bb{q} & \bb{0}
+\end{bmatrix}
+\begin{bmatrix}
+\bb{\dot{q}} \\ \bm{\upsigma}
+\end{bmatrix} =
+\begin{bmatrix}
+\bb{\widehat{p}} \\ -2\xi \omega \bb{\Phi} -\omega^2 \int\limits_{t_0}^t \bb{\Phi}d\tau
+\end{bmatrix}
+\end{equation}
+
+Mimo, ¿e w sformu³owaniu równañ kanonicznych wystêpuje $2n+m$ niewiadomych, to rozwi¹zywany uk³ad równañ jest wci¹¿ rozmiaru $n+m$.
+
+Od tego momentu nowe pêdy uogólnione bêd¹ oznaczane $\bb{p}$ zamiast $\bb{\widehat{p}}$. Ponadto wektor si³ uogólnionych $\bb{Q}$  oznaczaæ bêdzie:
+\begin{equation}
+\bb{Q} = L_\bb{q}^T + \bb{P}
+\end{equation}
+
+\vspace{0.5cm}
+\paragraph{Algorytm rozwi¹zywania zadania prostego dynamiki} 
+\begin{enumerate}
+\item Podanie warunków pocz¹tkowych (wektorów $\bb{q}_0$ i $\bb{\dot{q}}_0$) spe³niaj¹cych równania wiêzów dla po³o¿eñ (\ref{eqWiezy}) i prêdkoœci (\ref{dWiezy}).
+\item Policzenie wektora $\bb{p}_0$ ze wzoru:
+\begin{equation} \label{prêdkoœæ2pêd}
+\bb{p}_0 = \bb{M} \bb{\dot{q}}_0
+\end{equation}
+
+\item Konstrukcja wektora:
+\begin{equation} \label{pêdyPocz}
+\bb{Y}_0 = \begin{bmatrix}
+\bb{q}_0 \\ \bb{p}_0
+\end{bmatrix}
+\end{equation}
+
+\item Konstrukcja funkcji $H$ zgodnie z (\ref{funH}). Powy¿sza funkcja dzia³a nastêpuj¹co: \begin{itemize}
+\item Wczytanie aktualnego czasu i wektora $\bb{Y}$
+\item Obliczenie macierzy i wektorów wystêpuj¹cych w (\ref{KANONICZNE}) i rozwi¹zanie tego uk³adu równañ. Po rozwi¹zaniu powy¿szego uk³adu znany jest wektor prêdkoœci $\bb{\dot{q}}$. Pochodna pêdów $\bb{\dot{p}}$ mo¿e byæ policzona ze wzoru:
+\begin{equation}
+\bb{\dot{p}} =\bb{Q} + \bb{\dot{\Phi}}_\textbf{q}^T \bm{\upsigma}
+\end{equation}
+\item Podstawienie:
+\begin{equation}
+\bb{\dot{Y}} = \begin{bmatrix}
+\bb{\dot{q}} \\ \bb{\dot{p}}
+\end{bmatrix}
+\end{equation}
+
+\end{itemize}
+
+\item U¿ycie jawnej procedury ca³kuj¹cej. 
+\end{enumerate}
+
+Do sca³kowania powy¿szego problemu równie¿ u¿yto procedury \emph{ode45}. 
+
+Sformu³owanie zadania dynamiki w postaci równañ kanonicznych ma wiele zalet w porównaniu do sformu³owania z \ref{NewEul} (wg \cite{1A}): 
+
+\begin{itemize}
+\item Koniecznoœæ jednokrotnego ró¿niczkowania równania wiêzów (zamiast dwukrotnego).
+\item Mniejsze naruszenie równañ wiêzów przez procedurê ca³kuj¹c¹.
+\item Gdyby nie stosowaæ stabilizacji, w sformu³owaniu Newtona-Eulera \ref{NewEul} wystêpuje liniowe narastanie b³êdu wiêzów dla po³o¿eñ. W sformu³owaniu równañ kanonicznych b³¹d dla po³o¿eñ pozostaje sta³y, zatem uzyskane rozwi¹zania s¹ dok³adniejsze.
+\item Prêdkoœci s¹ zmiennymi stanu zwi¹zanymi jedynie z danymi cz³onami, podczas gdy pêdy uogólnione wystêpuj¹ce w równaniach kanonicznych zawieraj¹ sk³adnik zwi¹zany z~wiêzami. Dziêki temu, mniej prawdopodobne jest uzyskanie w rozwi¹zaniu odpowiedzi z~wysokimi czêstotliwoœciami
+\item Sformu³owanie w równaniach kanonicznych jest ponadto zalecane do modelowania zjawisk nieci¹g³ych (zderzeñ), podczas których spe³niona jest zasada zachowania pêdu.
+\end{itemize}
+
+\subsection*{Problemy klasycznych sformu³owañ}
+
+\begin{figure}[H]
+\includegraphics[width=0.5\textwidth]{korbowo_wodzikowy}
+\centering
+\caption{Mechanizm korobowo-wodzikowy - mo¿liwe ruchy w punkcie bifurkacji}
+\end{figure}
+Klasyczne sformu³owania opisywane do tej pory zawodz¹, gdy mechanizm osi¹gnie po³o¿enie osobliwe. Po³o¿enie osobliwe mechanizmu wi¹¿e siê z nagl¹ zmiany stopni swobody mechanizmu. Dla przyk³adu: rysunek powy¿ej prezentuje mechanizm korbowo-wodzikowy z korb¹ i wahaczem o równej d³ugoœci. Kiedy korba i wahacz ustawi¹ siê w linii pionowej, mechanizm ma dwa mo¿liwoœci ruchu: \begin{itemize}
+\item dalej jako mechanizm korbowo-wodzikowy (rysunek po lewej)
+\item jako pojedyncze wahad³o (rysunek po prawej)
+\end{itemize}
+
+Punkt, w którym mechanizm zyskuje dodatkowy stopieñ swobody, nazywa siê punktem bifurkacji. Jest on natychmiastowo wykrywany, gdy macierz Jacobiego $\bb{\Phi}_\bb{q}$ traci rz¹d. W takim wypadku symulacja zatrzymuje siê, co jest spowodowane niedoskona³oœci¹ modelu matematycznego. 
+
+Je¿eli wszystkie wiêzy s¹ niezale¿ne, to zachodzi:
+\begin{equation}
+m=n-f
+\end{equation}
+
+Gdzie $m$ to liczba narzuconych wiêzów, $n$ to liczba wspó³rzêdnych uogólnionych, a $f$ to ruchliwoœæ mechanizmu (lub rozmiar przestrzeni j¹dra macierzy $R$ z podrozdzia³u \ref{podejœciaRRA}). Macierze wystêpuj¹ce w (\ref{BAUMGART}) i (\ref{KANONICZNE}) maj¹ wtedy rz¹d $n+m$. Poniewa¿ macierz Jacobiego $\bb{\Phi}_\bb{q}$ staje siê osobliwa, to degeneruj¹ siê równie¿ macierze stoj¹ce przy tych równaniach. Nie mo¿na przez to jednoznacznie wyznaczyæ przyspieszeñ (b¹dŸ prêdkoœci w sformu³owaniu (\ref{KANONICZNE})). Równie¿ sformu³owanie we wspó³rzêdnych niezale¿nych nie radzi sobie w tej sytuacji (nie mo¿na wyznaczyæ macierzy $\bb{R}$). 
+
+Problemem jest nie tylko dok³adne osi¹gniêcie po³o¿enia osobliwego, ale te¿ zbli¿enie siê do~niego. Odpowiednie macierze (zanim strac¹ rz¹d) stan¹ siê Ÿle uwarunkowane, co prowadzi do~narastania b³êdu wiêzów i spadku dok³adnoœci rozwi¹zania. 
+
+Warto podkreœliæ, ¿e po³o¿enie osobliwe zawsze poci¹ga za sob¹ osobliwoœæ macierzy Jacobiego $\bb{\Phi}_\bb{q}$. Jednak¿e osobliwoœæ macierz Jacobiego mo¿e byæ równie¿ spowodowana gdy wystêpuj¹ce wiêzy s¹ zale¿ne b¹dŸ wybór wspó³rzêdnych niezale¿nych nie zosta³ dokonany poprawnie.
+
+\subsection{Sformu³owanie oparte na rozszerzonym lagran¿janie i równaniach kanonicznych} \label{sformulowanie3}
+
+\subsubsection{Wersja podstawowa}
+
+Niniejsze sformu³owanie pochodzi z pracy \cite{0A}. Metoda ta polega na wygenerowaniu mno¿ników Lagrange'a z równañ wiêzów, które staj¹ siê funkcjami kar za niespe³nienie tych¿e wiêzów oraz na dodaniu do lagran¿janu (\ref{lag}) dwóch dodatkowych sk³adników zale¿nych od spe³nienia równañ wiêzów (fikcyjn¹ energiê potencjaln¹ i~kinetyczn¹). Zdefiniowaæ tak mo¿na now¹ funkcjê Lagrange'a postaci:
+\begin{equation}
+ \widetilde{L} = L + \dfrac{1}{2} \bb{\dot{\Phi}}^T \alpha \bb{\dot{\Phi}} - \dfrac{1}{2}\bb{\Phi}^T \alpha\omega^2 \bb{\Phi} + \bb{\dot{\Phi}} \bm{\widetilde{\upsigma}}
+\end{equation}
+
+W granicy, gdy równania wiêzów s¹ spe³nione, fikcyjne cz³ony znikaj¹ i $\bm{\widetilde{\upsigma}}=\bm{\upsigma}$.
+Do uk³adu dodane s¹ równie¿ si³y dyssypacyjne (zwi¹zane z wiêzami dla prêdkoœci) Rayleigh'a postaci:
+\begin{equation} \label{Rayleigh}
+G_k = -2 \alpha \xi \omega \bb{\dot{\Phi}}
+\end{equation}
+
+Pêdy uogólnione dla takiego sformu³owania przybior¹ postaæ:
+\begin{equation}
+\bb{p} = \dfrac{\partial L}{\partial \bb{\dot{q}}} = \bb{M} \bb{\dot{q}} + \bb{\Phi}_\bb{q}^T \alpha \bb{\dot{\Phi}} + \bb{\Phi}_\bb{q}^T \bm{\widetilde{\upsigma}}
+\end{equation}
+
+U¿ycie zmodyfikowanego równania Hamiltona (\ref{newHam}), równañ kanonicznych z (\ref{rówKan}) i si³ Rayleigh'a (\ref{Rayleigh}) prowadzi do kompletnego uk³adu równañ kanonicznych:
+\begin{align}
+(&\bb{M} + \bb{\Phi}_\bb{q}^T \alpha \bb{\Phi}_\bb{q})\bb{\dot{q}} = \bb{p} - \bb{\Phi}_\bb{q}^T \bm{\widetilde{\upsigma}} \label{pedy} \\ 
+&\bb{\dot{p}}=\bb{Q} + \bb{\dot{\Phi}}_\bb{q}^T \alpha \bb{\dot{\Phi}} - \bb{\Phi}_\bb{q}^T \alpha (2\xi\omega \bb{\dot{\Phi}} + \omega^2 \bb{\Phi}) + \bb{\dot{\Phi}}_\bb{q}^T \bm{\widetilde{\upsigma}} \label{ppedy}
+\end{align}
+
+Jest to uk³ad $2n$ równañ ro¿niczkowych zwyczajnych, jednak¿e w ka¿dym kroku czasowym musi byæ rozwi¹zywany uk³ad równañ liniowych o wymiarze $n$, gdy¿ pochoda pêdów uogólnionych zadana jest w jawnej formie. Niestety, takie sformu³owanie powoduje, ¿e wiêkszoœæ sk³adników funkcji kar koncentruje siê w równaniu (\ref{ppedy}), co powoduje du¿¹ sztywnoœæ numeryczn¹ powy¿szego sformu³owania. W pracy \cite{2A} zaproponowano dodatkow¹ stabilizacjê.
+
+Warto wspomnieæ, ¿e obok sformu³owania opartego na rozszerzonych mno¿nikach Lagrange'a i równaniach kanonicznych istnieje analogiczne sformu³owanie oparte na klasycznych równaniach Newtona-Eulera (opartych na przyspieszeniach) postaci:
+\begin{equation} \label{ALF1}
+(\bb{M} + \bb{\Phi}_\bb{q}^T \alpha \bb{\Phi}_\bb{q})\bb{\ddot{q}} = \bb{Q} -\bb{\Phi}_\bb{q}^T \alpha(\bb{\dot{\Phi}}_\bb{q} \bb{\dot{q}} + 2\xi\omega \bb{\dot{\Phi}} + \omega^2 \bb{\Phi})-  \bb{\Phi}_\bb{q}^T \bm{\widetilde{\uplambda}}
+\end{equation}
+
+\subsubsection{Wersja rozszerzona}
+
+Pomys³ pochodzi z pracy \cite{2A}. W celu zapewnienia lepszej stabilizacji równania (\ref{pedy}) dodano dwa dodatkowe sk³adniki kar: sk³adnik proporcjonalny do wiêzów dla po³o¿eñ oraz sk³adnik proporcjonalny do ca³ki z wiêzów dla po³o¿eñ. Zgodnie z tym, momenty uogólnione s¹ obliczane ze wzoru:
+\begin{equation} \label{pêdy}
+\bb{p}=\bb{M} \bb{\dot{q}} + \bb{\Phi}_\bb{q}^T \alpha \left(\bb{\dot{\Phi}} + 2\xi \omega \bb{\Phi} + \omega^2 \int_{t_0}^{t}\bb{\Phi} d\tau \right) + \bb{\Phi}_\bb{q}^T \bm{\widetilde{\upsigma}}
+\end{equation}
+
+Zmodyfikowany uk³ad równañ kanonicznych wygl¹da teraz nastêpuj¹co (drugie równanie uzyskano poprzez zró¿niczkowanie poprzedniego równania i wstawienie do równania (\ref{ALF1})):
+\begin{align} \label{noweKan}
+(&\bb{M} + \bb{\Phi}_\bb{q}^T \alpha \bb{\Phi}_\bb{q})\bb{\dot{q}} = \bb{p} -\bb{\Phi}_\bb{q}^T \alpha \left(2\xi \omega \bb{\Phi} + \omega^2 \int_{t_0}^{t}\bb{\Phi} d\tau \right) - \bb{\Phi}_\bb{q}^T \bm{\widetilde{\upsigma}} \\
+&\bb{\dot{p}}=\bb{Q} + \bb{\dot{\Phi}}_\bb{q}^T \alpha \left( \bb{\dot{\Phi}} + 2\xi\omega \bb{\Phi} + \omega^2 \int_{t_0}^{t}\bb{\Phi} d\tau \right) + \bb{\dot{\Phi}}_\bb{q}^T \bm{\widetilde{\upsigma}} \label{dPêdy}
+\end{align}
+
+Gdzie niewiadomymi s¹ wektory $\bb{\dot{q}}$, $\bb{\dot{p}}$ i $\bm{\widetilde{\upsigma}}$.
+Powy¿sze równania w przeciwieñstwie do (\ref{pedy}) i (\ref{ppedy}) nie s¹ sztywne, przez co rozwi¹zania s¹ dok³adniejsze i zapewniaj¹ satysfakcjonuj¹c¹ stabilizacjê wiêzów.
+
+Zalety wynikaj¹ce z zastosowaniu równañ kanonicznych w porównaniu ze sformu³owaniem opartym na przyspieszeniach s¹ w tym przypadku podobne do omawianych w (\ref{KanRów}). W pracy \cite{2A} pokazano te¿, ¿e sformu³owanie to lepiej radzi sobie w symulacji mechanizmów wielokrotnie osi¹gaj¹cych po³o¿enie osobliwe w czasie symulacji.
+
+Macierz $\bb{M} + \bb{\Phi}_\bb{q}^T \alpha \bb{\Phi}_\bb{q}$ uk³adu równañ liniowych ma wiele zalet. Macierz ta jest dodatnio okreœlona i nie staje siê osobliwa w po³o¿eniu osobliwym mechanizmu (macierz w~równaniu (\ref{KANONICZNE}) jest dodatnio pó³-okreœlona oraz staje siê osobliwa w po³o¿eniu osobliwym mechanizmu). Dziêki dodatniej okreœlonoœci powy¿sza macierz mo¿e podlegaæ faktoryzacji, nawet w~po³o¿eniach osobliwych i z wystêpuj¹cymi wiêzami zale¿nymi.
+
+Mno¿niki Lagrange'a $\bm{\widetilde{\upsigma}}$ pe³ni¹ role sk³adników koryguj¹cych. Je¿eli w granicy równania wiêzów s¹ spe³nione, to wtedy $\bm{\widetilde{\upsigma}} \cong \bm{\upsigma}$. Na podstawie równañ (\ref{KANONICZNE}) i (\ref{noweKan}) mo¿na pokazaæ ¿e:
+\begin{equation} \label{sigma}
+\bm{\upsigma}=\bm{\widetilde{\upsigma}}+\alpha \left(\bb{\dot{\Phi}} + 2\xi \omega \bb{\Phi} + \omega^2 \int_{t_0}^{t}\bb{\Phi} d\tau \right)
+\end{equation}
+
+Wektor $\bm{\upsigma}$ nie jest znany a priori, ale mo¿na go wyznaczyæ iteracyjnie zgodnie z równaniem:
+\begin{equation} \label{iterSigma}
+\bm{\widetilde{\upsigma}}_{i+1}=\bm{\widetilde{\upsigma}}_i+\alpha \left(\bb{\dot{\Phi}} + 2\xi \omega \bb{\Phi} + \omega^2 \int_{t_0}^{t}\bb{\Phi} d\tau \right)_{i+1}, \quad i=0,1,2,\ldots
+\end{equation}
+
+Gdzie mo¿na przyj¹æ $\bm{\widetilde{\upsigma}}_0 = \bb{0}$. Proces iteracyjny mo¿na zaaplikowaæ bezpoœrednio do równania (\ref{noweKan}) otrzymuj¹c:
+\begin{equation} \label{iterHam}
+(\bb{M} + \bb{\Phi}_\bb{q}^T \alpha \bb{\Phi}_\bb{q})\bb{\dot{q}}_{i+1} = \bb{M\dot{q}}_i -\bb{\Phi}_\bb{q}^T \alpha \left(2\xi \omega \bb{\Phi} + \omega^2 \int_{t_0}^{t}\bb{\Phi} d\tau \right), \quad i=0,1,2,\ldots
+\end{equation}
+
+Warto wspomnieæ, ¿e równanie (\ref{pedy}) mo¿e byæ rozpatrywane jako ogólna metoda kar (zaimplementowana w \cite{3A}) z dodanymi mno¿nikami Lagrange'a $\bm{\widetilde{\upsigma}}$. Jak pokazano w pracy \cite{0A} sformu³owanie z wykorzystaniem iteracji (\ref{iterSigma}) rozszerza zakres dopuszczalnych parametrów stabilizacji $\alpha$, $\beta$ i $\omega$, dla których osi¹gana jest zbie¿noœæ rozwi¹zania. Ogólna metoda kar jest szybsza, jednak¿e wymaga wiêkszych niedok³adnoœci w spe³nieniu równañ wiêzów, poniewa¿ wektor nieoznaczonych wspó³czynników Lagrange'a przyjmuje wtedy wprost postaæ:
+\begin{equation}
+\bm{\upsigma} = \alpha \left(\bb{\dot{\Phi}} + 2\xi \omega \bb{\Phi} + \omega^2 \int_{t_0}^{t}\bb{\Phi} d\tau \right)
+\end{equation}
+
+Powy¿sze równanie jest to¿same równaniu (\ref{iterSigma}) dla którego wykonano jedn¹ iteracjê.
+
+\subsubsection{Algorytm rozwi¹zania} \label{ref2H}
+
+\begin{enumerate}
+\item Podanie warunków pocz¹tkowych $\bb{q}_0$, $\bb{\dot{q}}_0$ i $\bm{\upsigma}_0$.
+\item Policzenie wektora pêdów $\bb{p}_0$ z równania (\ref{prêdkoœæ2pêd}).
+\item Konstrukcja wektora $\bb{Y}_0$ z równania (\ref{pêdyPocz}).
+\item Konstrukcja funkcji $\bb{H}$ zgodnie z (\ref{funH}): \begin{itemize}
+
+\item Wczytanie aktualnego czasu i wektora $\bb{Y}$.
+\item Obliczenie wektora startowego $\bb{\dot{q}}_0$ z równania (\ref{prêdkoœæ2pêd}).
+\item Iteracyjne wyliczenie wektora $\bb{\dot{q}}$ zgodnie z równaniem (\ref{iterHam}). Konieczne jest rozwi¹zanie uk³adu równañ o rozmiarze $n$ w ka¿dej iteracji. 
+\item Na koniec ka¿dej iteracji wyliczenie wektora $\bm{\widetilde{\upsigma}}$ zgodnie z (\ref{iterSigma}). Kryterium stopu iteracji mo¿e byæ przyjête jako:
+\begin{equation} \label{epsilon1}
+|\bb{\dot{q}}_{i+1} - \bb{\dot{q}}_i| < \varepsilon
+\end{equation}
+Gdzie $\varepsilon$ to zadana dok³adnoœæ. Dodatkowo nale¿y dodaæ dodatkowy warunek ograniczaj¹cy maksymaln¹ liczbê iteracji.
+\item Jawne wyliczenie wektora $\bb{\dot{p}}$ zgodnie ze wzorem (\ref{dPêdy}).
+\end{itemize}
+\item Wywo³anie jawnej procedury ca³kuj¹cej.
+\end{enumerate}
+
+\subsection{Sformu³owanie oparte na równaniach kanonicznych z u¿yciem niejawnej metody trapezów i iteracjami Newtona-Raphsona} \label{sformulowanie4}
+
+\subsubsection{Wyprowadzenie wzorów}
+Jak opisano w podrozdziale (\ref{trapezy}), metoda trapezów posiada wiele zalet (A-stabilnoœæ, dok³adnoœæ 2. rzêdu, szybkoœæ). Metodê trapezów mo¿na zaaplikowaæ do równañ (\ref{noweKan}) i (\ref{dPêdy}), a otrzymany uk³ad równañ nieliniowych rozwi¹zaæ metod¹ iteracji Newtona-Raphsona, gdzie niewiadomymi bêd¹ wektory $\bb{q}$ i $\bb{p}$. Pomys³ pochodzi z pracy \cite{4A}.
+
+Równania schematu trapezów (\ref{eqtrapezy}) mo¿na zaaplikowaæ do wektorów $\bb{q}$ i $\bb{p}$, przekszta³caj¹c je w celu uzyskania wyra¿eñ na pochodne tych¿e wektorów:
+\begin{align}
+\bb{\dot{q}}_{k+1}&=\dfrac{2}{h}(\bb{q}_{k+1}-\bb{q}_k)-\bb{\dot{q}}_k \\
+\bb{\dot{p}}_{k+1}&=\dfrac{2}{h}(\bb{p}_{k+1}-\bb{p}_k)-\bb{\dot{p}}_k
+\end{align}
+
+Powy¿sze równania mo¿na wstawiæ do równañ (\ref{noweKan}) i (\ref{dPêdy}). Zak³adaj¹c spe³nienie tych równañ w kroku $k+1$ mo¿na otrzymaæ uk³ad równañ nieliniowych postaci:
+\begin{equation} \label{funG}
+\bb{g}(\bb{y})=\begin{bmatrix}
+\bb{g}_1(\bb{y}) \\
+\bb{g}_2(\bb{y})
+\end{bmatrix} = \bb{0}, \quad \mbox{gdzie} \quad \bb{y}=\begin{bmatrix}
+\bb{q} \\ \bb{p}
+\end{bmatrix}
+\end{equation}
+
+Gdzie:
+\begin{align}
+\bb{g}_1 &=\dfrac{h}{2} \left[\bb{M\dot{q}} - \bb{p}+\bb{\Phi}_\bb{q}^T \bm{\upsigma} + \bb{\Phi}_\bb{q}^T \alpha \label{g1} \left(\bb{\dot{\Phi}}+ 2\xi \omega \bb{\Phi} + \omega^2 \int_{t_0}^{t}\bb{\Phi} d\tau \right) \right] \\
+\bb{g}_2 &=\dfrac{h}{2} \left[\bb{\dot{p}} - \bb{Q} -\bb{\dot{\Phi}}_\bb{q}^T \bm{\upsigma} - \bb{\dot{\Phi}}_\bb{q}^T \alpha \label{g2} \left(\bb{\dot{\Phi}}+ 2\xi \omega \bb{\Phi} + \omega^2 \int_{t_0}^{t}\bb{\Phi} d\tau \right) \right] \\
+\nonumber (&\mbox{dla uproszczenia zapisu od teraz } \bm{\widetilde{\upsigma}}=\bm{\upsigma})
+\end{align}
+
+
+Schemat iteracyjny Newtona-Raphsona przyjmuje postaæ:
+\begin{align} \label{NewRap}
+\begin{bmatrix}
+\dfrac{\mbox{d}\bb{g(\bb{y})}}{\mbox{d}\bb{y}} 
+\end{bmatrix}_i \Delta\bb{y}_{i+1}=-\bb{g}(\bb{y}) \\
+\nonumber \bb{y}_{i+1}=\bb{y}_i + \Delta\bb{y}_{i+1}
+\end{align}
+
+Gdzie $\begin{bmatrix}
+\dfrac{\mbox{d}\bb{g(\bb{y})}}{\mbox{d}\bb{y}} 
+\end{bmatrix}_i$ to macierz Jacobiego rozwi¹zywana w $i$-tej iteracji Newtona-Raphsona, któr¹ uzyskuje siê poprzez policzenie pochodnych cz¹stkowych równania (\ref{funG}) po wektorze $\bb{y}$.
+Macierz ta mo¿e byæ przedstawiona w postaci:
+\begin{equation}
+\begin{bmatrix}
+\dfrac{\mbox{d}\bb{g(\bb{y})}}{\mbox{d}\bb{y}} \end{bmatrix} = \begin{bmatrix}
+\dfrac{\mbox{d}\bb{g}_1(\bb{y})}{\mbox{d}\bb{q}} &
+\dfrac{\mbox{d}\bb{g}_1(\bb{y})}{\mbox{d}\bb{p}} \\
+\dfrac{\mbox{d}\bb{g}_2(\bb{y})}{\mbox{d}\bb{q}} & 
+\dfrac{\mbox{d}\bb{g}_2(\bb{y})}{\mbox{d}\bb{p}}
+\end{bmatrix}
+\end{equation}
+
+Podczas liczenia cz³onów $\dfrac{\mbox{d}\bb{g}_1(\bb{y})}{\mbox{d}\bb{q}}$ i $\dfrac{\mbox{d}\bb{g}_2(\bb{y})}{\mbox{d}\bb{q}}$ pominiêto wyra¿enia $(\bb{\Phi}_\bb{q}\ldots)_\bb{q}$ oraz $(\bb{\dot{\Phi}}_\bb{q}\ldots)_\bb{q}$, poniewa¿ ich wp³yw jest pomijalnie ma³y w porównaniu z innymi sk³adnikami. Ponadto za³o¿ono, ¿e wektor nieoznaczonych mno¿ników $\bm{\upsigma}$ jest niezale¿ny od wektora $\bb{y}$. Zgodnie z powy¿szymi za³o¿eniami mo¿na powy¿sze wyra¿enia przedstawiæ jako:
+\begin{align} \label{dg0}
+\dfrac{\mbox{d}\bb{g}_1(\bb{y})}{\mbox{d}\bb{q}} &= \bb{M} + \bb{\Phi}_\bb{q}^T \alpha \left[(1+h\xi\omega) \bb{\Phi}_\bb{q}+\dfrac{h\omega^2}{2} \left(\int_{t_0}^{t}\bb{\Phi} d\tau \right)_\bb{q} \right] \\ \label{dg1}
+\dfrac{\mbox{d}\bb{g}_1(\bb{y})}{\mbox{d}\bb{p}} &= -\dfrac{h}{2} \bb{I}_{nxn} \\ \label{dg11}
+\dfrac{\mbox{d}\bb{g}_2(\bb{y})}{\mbox{d}\bb{q}} &= -\dfrac{\mbox{d}\bb{Q}}{\mbox{d}\bb{q}} - \bb{\dot{\Phi}}_\bb{q}^T \alpha  \left[(1+h\xi\omega) \bb{\Phi}_\bb{q}+\dfrac{h\omega^2}{2} \left(\int_{t_0}^{t}\bb{\Phi} d\tau \right)_\bb{q} \right] \\ 
+\dfrac{\mbox{d}\bb{g}_2(\bb{y})}{\mbox{d}\bb{p}} &= \bb{I}_{nxn} \label{dg2}
+\end{align}
+
+Gdzie ca³kê z macierzy Jacobiego mo¿na zapisaæ jako:
+\begin{align} \label{iJacobi}
+\left(\int_{t_0}^{t}\bb{\Phi} d\tau \right)_\bb{q} = \int_{t_0}^{t}\bb{\Phi}_\bb{q} d\tau \cong \sum\limits_{j=0}^{k+1}h\bb{\Phi}_{\bb{q}_j}
+\end{align}
+
+Uk³ad równañ rozwi¹zywany w ka¿dej iteracji (\ref{NewRap}) ma rozmiar $2n$. Wektor $\Delta\bb{q}_{i+1}$ mo¿na obliczyæ jako:
+\begin{equation}
+\left[\dfrac{\mbox{d}\bb{g}_1}{\mbox{d}\bb{q}} - \dfrac{\mbox{d}\bb{g}_1}{\mbox{d}\bb{p}} \left(\dfrac{\mbox{d}\bb{g}_2}{\mbox{d}\bb{p}}\right)^{-1} \dfrac{\mbox{d}\bb{g}_2}{\mbox{d}\bb{q}} \right] \Delta\bb{q}_{i+1} = -\bb{g}_1 + \dfrac{\mbox{d}\bb{g}_1}{\mbox{d}\bb{p}} \left(\dfrac{\mbox{d}\bb{g}_2}{\mbox{d}\bb{p}}\right)^{-1} \bb{g}_2
+\end{equation}
+
+Poniewa¿ znany jest wektor $\Delta\bb{q}_{i+1}$ mo¿na obliczyæ wektor $\Delta\bb{p}_{i+1}$:
+\begin{equation}
+\Delta\bb{p}_{i+1}=\left(\dfrac{\mbox{d}\bb{g}_2}{\mbox{d}\bb{p}}\right)^{-1} \left(-\bb{g}_2-\dfrac{\mbox{d}\bb{g}_2}{\mbox{d}\bb{q}} \Delta\bb{q}_{i+1} \right)
+\end{equation}
+
+Zgodnie z równaniami (\ref{dg1}) i (\ref{dg2}) powy¿sze równania mog¹ byæ uproszczone do postaci:
+\begin{align} \label{final1}
+&\left(\dfrac{\mbox{d}\bb{g}_1}{\mbox{d}\bb{q}} + \dfrac{h}{2}  \dfrac{\mbox{d}\bb{g}_2}{\mbox{d}\bb{q}} \right) \Delta\bb{q}_{i+1} = -\bb{g}_1 - \dfrac{h}{2} \bb{g}_2 \\
+&\Delta\bb{p}_{i+1}=-\bb{g}_2-\dfrac{\mbox{d}\bb{g}_2}{\mbox{d}\bb{q}} \Delta\bb{q}_{i+1} \label{final2}
+\end{align}
+
+Zgodnie z powy¿szymi wzorami, w ka¿dym $k$-tym kroku zachodzi koniecznoœæ iteracyjnego rozwi¹zania problemu $2n$ równañ nieliniowych. Jednak dziêki takiemu podzia³owi zmiennych w~ka¿dej $i$-tej iteracji zachodzi koniecznoœæ rozwi¹zywania uk³adu równañ liniowych o rozmiarze $n$. W~celu poprawienia zbie¿noœci procesu w ka¿dej iteracji nale¿y aktualizowaæ wektor $\bm{\upsigma}$ zgodnie ze wzorem (\ref{iterSigma}).
+
+\subsubsection{Algorytm rozwi¹zania} \label{algSf4}
+
+\begin{enumerate}
+\item Podanie warunków pocz¹tkowych $\bb{q}_0$, $\bb{\dot{q}}_0$ i $\bm{\upsigma}_0$.
+\item Policzenie wektora pêdów $\bb{p}_0$ z równania (\ref{prêdkoœæ2pêd}).
+\item Wprowadzenie wektora $\bb{I^\Phi}$ reprezentuj¹cego wyra¿enie $\int\limits_{t_0}^{t}\bb{\Phi} d\tau$. Wyzerowanie tego wektora (wymagane jest aby równanie wiêzów dla po³o¿eñ by³o spe³nione przez wektor $\bb{q}_0$).
+\item Wprowadzenie macierzy $\bb{I}^{\bb{\Phi}_\bb{q}}$ dla wyra¿enia $\int\limits_{t_0}^{t}\bb{\Phi}_\bb{q} d\tau$. Wyzerowanie tej macierzy. Macierz ta jest wymiaru $m$ x $n$.
+\item W kroku $k=0$ konieczne jest wyliczenie wektorów pochodnych $\bb{\dot{q}}_0$ i $\bb{\dot{p}}_0$. U¿yto do tego procedury $\bb{H}$ zdefiniowanej w podrozdziale (\ref{ref2H}).
+\item Dla ka¿dego $k+1$ kroku: \begin{itemize}
+
+\item Wczytanie wektorów $\bb{y}_k$ i $\bb{\dot{y}}_k$. Wektor $\bb{y}$ zbudowany jest zgodnie z (\ref{funG}).
+\item Aktualizacja wektora $\bb{I^\Phi}$ zgodnie z jawnym schematem Eulera (\ref{jawnyEuler}):
+\begin{equation}
+\bb{I}_{new}^\bb{\Phi} = \bb{I}_{old}^\bb{\Phi} + h \bb{\Phi}(\bb{q}_k)
+\end{equation}
+\item Aktualizacja macierzy $\bb{I^\Phi_q}$ zgodnie z jawnym schematem Eulera i równaniem (\ref{iJacobi}):
+\begin{equation}
+\bb{I}_{new}^\bb{\Phi_q} = \bb{I}_{old}^\bb{\Phi_\bb{q}} + h \bb{\Phi}_\bb{q}(\bb{q}_k)
+\end{equation}
+
+\item Predykcja wektora $\bb{y}_{k+1}^{i=0}$ zgodnie z jawnym schematem Eulera:
+\begin{equation}
+\bb{y}_{k+1}^{0} = \bb{y}_k + h \bb{\dot{y}}_k
+\end{equation}
+\item Podstawienie dla wektora $\bb{\dot{y}}_{k+1}^{i=0}$:
+\begin{equation}
+\bb{\dot{y}}_{k+1}^{0} = \bb{\dot{y}}_k 
+\end{equation}
+\item Podstawienie dla wektora $\bm{\upsigma}_{k+1}^{i=0}$:
+\begin{equation}
+\bm{\upsigma}_{k+1}^{0} = \bm{\upsigma}_k
+\end{equation}
+\item Uruchomienie iteracji Newtona-Raphsona zgodnie ze wzorem (\ref{NewRap}). W ka¿dej $i+1$ iteracji (tam gdzie pominiêto indeks dolny dla poprawy czytelnoœci jest $k+1$): \begin{enumerate}[a.]
+\item Wyliczenie wyra¿eñ (\ref{g1}), (\ref{g2}) i (\ref{dg0})-(\ref{dg2}) dla aktualnych wartoœci wektorów $\bb{q}^i$ i $\bb{\dot{q}}^i$.
+\item Rozwi¹zanie uk³adu równañ (\ref{final1}) i wyznaczenie $\Delta\bb{q}^{i+1}$. Nastêpnie wyznaczenie $\Delta\bb{p}^{i+1}$ ze wzoru (\ref{final2}).
+\item Aktualizacja wektora $\bb{y}^{i+1}$ zgodnie z (\ref{NewRap}). Nastêpnie zgodnie ze schematem trapezów (\ref{eqtrapezy}) wyznaczenie wektora $\bb{\dot{y}}^{i+1}$:
+\begin{equation}
+\bb{\dot{y}}^{i+1}_{k+1} = \dfrac{2}{h} ( \bb{y}^{i+1}_{k+1} - \bb{y}_k ) - \bb{\dot{y}}_k
+\end{equation}
+\item Wyliczenie wektora $\bm{\upsigma}^{i+1}$ ze wzoru (\ref{iterSigma}).
+\item Sprawdzenie kryterium stopu:
+\begin{equation} \label{epsilon2}
+|\Delta\bb{y}^{i+1}|< \varepsilon
+\end{equation}
+Dodatkowo ograniczyæ mo¿na maksymaln¹ liczbê iteracji. Je¿eli warunki s¹ spe³nione, powrót do podpunktu a. 
+\end{enumerate}
+\item Aktualizacja czasu $t_{k+1} = t_k + h$ Je¿eli nie przekroczono czasu koñcowego, powrót do punktu 6.
+\end{itemize}
+\end{enumerate}
+
+\clearpage{\pagestyle{empty}\cleardoublepage}
+\section{Implementacja, wyniki analiz}
+
+\subsection{Walidacja sformu³owañ na przyk³adzie podwójnego wahad³a i~oprogramowania \emph{Adams}}
+
+Podstawy teoretyczne i implementacyjne zosta³y omówione w poprzednim rozdziale. Widaæ, ¿e ka¿de kolejne sformu³owanie jest udoskonaleniem poprzedniego. Celem tego rozdzia³u jest walidacja zastosowanych procedur, porównanie wyników pod k¹tem spe³nienia równañ wiêzów dla po³o¿eñ i prêdkoœci wraz z jednoczesn¹ kontrol¹ ca³kowitej energii mechanicznej. Ka¿de sformu³owanie zostanie przetestowane na przyk³adzie podwójnego wahad³a fizycznego.
+
+\subsubsection{Budowa}
+
+Podwójne wahad³o fizyczne zbudowane jest z $N=2$ cz³onów p³askich powi¹zanych za pomoc¹ 2 par obrotowych. Liczba wspó³rzêdnych uogólnionych u¿yta do jego opisu wynosi $n = 3N = 6$. Liczba równañ wiêzów wynosi $m=4$, liczba stopni swobody $f=n-m=2$. Budowa mechanizmu jest przedstawiona na rysunku poni¿ej:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{double_pend_rys}
+\caption{Podwójne wahad³o fizyczne: globalny uk³ad odniesienia, uk³ady lokalne. Po³o¿enie pocz¹tkowe}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{double_pend_adams}
+\caption{Podwójne wahad³o fizyczne: Model zbudowany w programie \emph{Adams}}
+\end{figure}
+
+Wymiary, parametry masowe i uk³ady wspó³rzêdnych w programie \emph{Adams} s¹ to¿same tym przyjêtym w programie \emph{Matlab}. Z ka¿dym cz³onem zwi¹zano uk³ad wspó³rzêdnych zaczepiony w œrodku masy cz³onu. Œrodek masy znajduje siê w po³owie d³ugoœci cz³onu.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}[t]{|c|c|c|c|c|c|} \hline
+\textbf{Lp.} & \textbf{Cz³on} & \textbf{Masa[kg]} & $\bb{I_z [kg \cdot m^2]}$ & \textbf{D³ugoœæ[m]} & $\varphi_0$ \\ \hline
+1 & \emph{A-B} & 6 & 1.0 & 1.0 & $\frac{\pi}{4}$ \\ \hline
+2 & \emph{B-C} & 10 & 1.6 & 1.5 & $\frac{\pi}{2}$ \\ \hline
+\end{tabular}
+\caption{Wymiary, parametry masowe, k¹ty pocz¹tkowe podwójnego wahad³a}
+\end{table}
+
+Budowa modelu matematycznego bêdzie szczegó³owo opisana w rozdziale \ref{modMat}. Ró¿nica bêdzie polegaæ na policzeniu energii potencjalnej $V$. Jedynymi si³ami dzia³aj¹cymi na cz³ony jest si³a grawitacji o wartoœci $\bb{F}_{gi}=m_i\cdot \bb{g}$, zatem si³a potencjalna dla $i$-tego cz³onu wynosi:
+\begin{equation}
+U_i= - m_i  \bb{g}^T \bb{r}_i
+\end{equation}
+
+Gdzie: $$\bb{r}_i = \begin{bmatrix}
+x_i \\ y_i
+\end{bmatrix}, \qquad \bb{g}=\begin{bmatrix}
+0 \\ -9.81
+\end{bmatrix} $$
+
+Ca³kowita energia potencjalna $U$ przedstawia siê wzorem:
+\begin{equation}
+U=\sum\limits_{i=1}^{N} U_i
+\end{equation}
+
+\subsubsection{Wyniki symulacji}
+
+\paragraph{Walidacja modeli}
+\hspace{0.3cm}
+
+Walidacja kolejnych sformu³owañ zostanie przeprowadzona na podstawie pomiaru ró¿nicy po³o¿eñ $x_1$ i $y_1$ œrodka masy cz³onu \emph{A-B} pomiêdzy rozwi¹zaniem uzyskanym w \emph{Adamsie}, a tym uzyskanym w \emph{Matlabie}. Symulacja bêdzie przeprowadzona przez $5$ s, z krokiem czasowym $h=10^{-3} s$. W programie \emph{Adams} u¿yto integratora GSTIFF, sformu³owanie I3, b³¹d ograniczony do $10^{-8}$. Parametry dla poszczególnych sformu³owañ zosta³y dobrane metod¹ prób i b³êdów, w oparciu o \cite{2A} i \cite{3A}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{sym_adams}
+\caption{Po³o¿enie œrodka masy cz³onu \emph{A-B} w uk³adzie globalnym uzyskane w programie \emph{Adams}}
+\end{figure}
+
+\begin{enumerate}
+\item Równania klasyczne (opisane w \ref{NewEul}), stabilizacja: $\xi=10$, $\omega=10$
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{sf1_mat_ad}
+\caption{Ró¿nica rozwi¹zañ \emph{Adamsa} i \emph{Matlaba}, równania klasyczne}
+\end{figure}
+
+\item Równania kanoniczne (opisane w \ref{KanRów}), stabilizacja: $\xi=10$, $\omega=1$
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{sf2_mat_ad}
+\caption{Ró¿nica rozwi¹zañ \emph{Adamsa} i \emph{Matlaba}, równania kanoniczne}
+\end{figure}
+
+\item Rozszerzony lagran¿jan, równania kanoniczne, \emph{ode45} (opisane w \ref{sformulowanie3}), stabilizacja: $\alpha=10^7$, $\xi=1$, $\omega=10$
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{sf3_mat_ad}
+\caption{Ró¿nica rozwi¹zañ \emph{Adamsa} i \emph{Matlaba}, rozszerzony lagran¿jan, \emph{ode45}}
+\end{figure}
+
+\item Rozszerzony lagran¿jan, równania kanoniczne, metoda trapezów (opisane w \ref{sformulowanie4}), stabilizacja: $\alpha=10^8$, $\xi=10^4$, $\omega=1$
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{sf4_mat_ad}
+\caption{Ró¿nica rozwi¹zañ \emph{Adamsa} i \emph{Matlaba}, rozszerzony lagran¿jan, metoda trapezów}
+\end{figure}
+
+\end{enumerate}
+
+\paragraph{Porównanie modeli}
+\hspace{0.3cm}
+
+Na kolejnych wykresach przedstawione zostanie porównanie spe³nienia równañ wiêzów dla po³o¿eñ, prêdkoœci oraz odchylenia energii ca³kowitej. Warunki symulacji oraz parametry dla poszczególnych sformu³owañ zosta³y przyjête tak jak poprzednio.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{sf_E_comp}
+\caption{Odchylenie energii ca³kowitej dla 4 sformu³owañ}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{sf_Phi_comp}
+\caption{Spe³nienie wiêzów na po³o¿enia dla 4 sformu³owañ (skala logarytmiczna)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{sf_dPhi_comp}
+\caption{Spe³nienie wiêzów na prêdkoœci dla 4 sformu³owañ (skala logarytmiczna)}
+\end{figure}
+
+\paragraph{Porównanie rozszerzonego lagran¿janu z metod¹ trapezów dla ró¿nych parametrów}
+\hspace{0.3cm}
+
+Na kolejnych wykresach przedstawione zostanie porównanie spe³nienia równañ wiêzów dla po³o¿eñ, prêdkoœci oraz odchylenia energii ca³kowitej dla ró¿nych parametrów $\alpha$ i $\xi$, $\omega=1$. Symulacja trwaæ bêdzie $50$ s, krok czasowy $h=10^{-3}$ s, dok³adnoœæ $\epsilon=10^{-10}$, maksymaln¹ liczbê iteracji ograniczono do 10.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{NR_E_comp2}
+\caption{Odchylenie energii ca³kowitej dla 4 zestawów parametrów}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{NR_Phi_comp2}
+\caption{Spe³nienie wiêzów na po³o¿enia dla 4 zestawów parametrów (skala logarytmiczna)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{NR_dPhi_comp2}
+\caption{Spe³nienie wiêzów na prêdkoœci dla 4 zestawów parametrów (skala logarytmiczna)}
+\end{figure}
+
+\paragraph{Wnioski}
+\hspace{0.3cm}
+
+\begin{itemize}
+\item Wszystkie sformu³owania zaimplementowano poprawnie, najlepsze rezultaty w porównaniu z \emph{Adamsem} otrzymano u¿ywaj¹c sformu³owania 4.
+\item U¿ywaj¹c sformu³owania 4. osi¹gniêto najlepsze spe³nienie wiêzów dla po³o¿eñ i przyspieszeñ oraz zapewniono stabilnoœæ energii ca³kowitej.
+\item Dla wyd³u¿onego czasu symulacji wiêzy dla po³o¿eñ i prêdkoœci zachowuj¹ siê stabilnie, amplituda oscylacji odchylenia energii narasta, jednak wartoœæ œrednia pozostaje równa 0.
+\item Zwiêkszanie parametru $\xi$ poprawia dok³adnoœæ spe³nienia wiêzów dla po³o¿eñ.
+\end{itemize}
+
+
+\subsection{Implementacja mechanizmu Andrews'a}
+
+\subsubsection{Budowa mechanizmu}
+
+Mechanizm (zgniatarka) Andrews'a to p³aski mechanizm zbudowany z $N=7$ cz³onów p³askich powi¹zanych za pomoc¹ $10$ par obrotowych. Liczba wspó³rzêdnych uoogólnionych u¿yta do jego opisu wynosi $n=3N=21$. Liczba równañ wiêzów wynosi $m=20$, zatem liczba stopni swobody $f = n-m = 1$. Do mechanizmu doczepiona jest ponadto niewa¿ka sprê¿yna o~wysokiej sztywnoœci. Szczegó³owy opis tego mechanizmu mo¿na znaleŸæ w \cite{MSH}. Mechanizm ten wymaga ca³kowania z krokiem poni¿ej $1$ ms z racji wysokich czêstoœci w³asnych (iloraz sztywnoœci i masy jest du¿y). Mechanizm Andrews'a jest ponadto sztywny w~rozumieniu przedstawionym w~rozdziale \ref{sztywne} (z powodu ró¿nicy poszczególnych mas cz³onów o rz¹d wielkoœci). 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{Andrews_mech}
+\caption{Mechanizm Andrews'a}
+\end{figure}
+
+Zgodnie z formalizmem przedstawionym w rozdziale \ref{absolutne} z ka¿dym cz³onem zwi¹zany jest uk³ad wspó³rzêdnych. Wymiary mechanizmu podane zostan¹ zgodnie z \cite{bench}. Wymiary zosta³y podane w lokalnych uk³adach wspó³rzêdnych, które zaczepione zosta³y w punktach startowych odcinków reprezentuj¹cych cz³ony. Wyj¹tkiem jest cz³on \emph{E-B-D} w kszta³cie trójk¹ta, gdzie uk³ad wspó³rzêdnych zaczepiono w punkcie $E$, a oœ y jest wspó³liniowa z odcinkiem \emph{E-B}. Globalny uk³ad wspó³rzêdnych bierze pocz¹tek w punkcie $O$.\\
+
+\begin{table}[H]
+\small
+\begin{minipage}[t]{0.5\textwidth}
+\centering
+\begin{tabular}[t]{|c|c|c|c|c|} \hline
+\textbf{Lp.} & \textbf{Cz³on} & \textbf{Punkt} & \textbf{x[m]} & \textbf{y[m] }\\ \hline
+1 & \emph{O-F} & \emph{O} & 0.0 & 0.0 \\ \cline{3-5}
+  &            & \emph{F} & 0.007 & 0.0 \\ \hline
+2 & \emph{E-F} & \emph{E} & 0.0 & 0.0 \\ \cline{3-5}
+  & 		   & \emph{F} & 0.028 & 0.0 \\ \hline
+3 & \emph{H-E} & \emph{H} & 0.0 & 0.0 \\ \cline{3-5}
+  & 		   & \emph{E} & 0.02 & 0.0 \\ \hline
+4 & \emph{G-E} & \emph{G} & 0.0 & 0.0 \\ \cline{3-5}
+  & 		   & \emph{E} & 0.02 & 0.0 \\ \hline
+\end{tabular}
+\end{minipage}
+\begin{minipage}[t]{0.5\textwidth}
+\centering
+\begin{tabular}[t]{|c|c|c|c|c|} \hline
+\textbf{Lp.} & \textbf{Cz³on} & \textbf{Punkt} & \textbf{x[m]} & \textbf{y[m] }\\ \hline
+5 & \emph{A-G} & \emph{A} & 0.0 & 0.0 \\ \cline{3-5}
+  &            & \emph{G} & 0.04 & 0.0 \\ \hline
+6 & \emph{A-H} & \emph{A} & 0.0 & 0.0 \\ \cline{3-5}
+  & 		   & \emph{H} & 0.04 & 0.0 \\ \hline
+7 & \emph{E-B-D} & \emph{E} & 0.0 & 0.0 \\ \cline{3-5}
+  &			 	 & \emph{B} & 0.0 & 0.035 \\ \cline{3-5}
+  & 		     & \emph{D} & 0.02 & 0.017 \\ \hline
+\end{tabular}
+\end{minipage}
+\caption{Lokalne wspó³rzêdne punktów mechanizmu}
+\end{table}
+
+Masy i momenty bezw³adnoœci poszczególnych cz³onów mechanizmu zaprezentowane s¹ w~tabeli \ref{tabMasy}. Pozycja œrodka masy wyra¿ona jest w uk³adzie lokalnym zwi¹zanym z danym cz³onem. Moment bezw³adnoœci $I_z$ policzony zosta³ wzglêdem œrodka masy. Tabela \ref{tabPunkty} prezentuje wspó³rzêdne punktów mocowania mechanizmu w uk³adzie globalnym.
+
+\begin{table}[H]
+\small
+\begin{minipage}[t]{0.65\textwidth} 
+\begin{tabular}[t]{|c|c|c|c|c|c|} \hline
+\textbf{Lp.} & \textbf{Cz³on} & \textbf{Masa[kg]} & $\bb{x_g[m]}$ & $\bb{y_g[m]}$ & $\bb{I_z [kg \cdot m^2]}$ \\ \hline
+1 & \emph{O-F} & 0.04325 & 0.00092 & 0.0 & $2.194 \cdot 10^{-6}$ \\ \hline
+2 & \emph{E-F} & 0.00365 & 0.0165 & 0.0 & $4.410 \cdot 10^{-7}$ \\ \hline
+3 & \emph{H-E} & 0.00706 & 0.00579 & 0.0 & $5.667 \cdot 10^{-7}$ \\ \hline
+4 & \emph{G-E} & 0.00706 & 0.00579 & 0.0 & $5.667 \cdot 10^{-7}$ \\ \hline
+5 & \emph{A-G} & 0.07050 & 0.02308 & 0.00916 & $1.169 \cdot 10^{-5}$ \\ \hline
+6 & \emph{A-H} & 0.05498 & 0.01228 & -0.00449 & $1.912 \cdot 10^{-5}$ \\ \hline
+7 & \emph{E-B-D} & 0.02373 & 0.01043 & 0.01626 & $5.255 \cdot 10^{-6}$ \\ \hline
+\end{tabular}
+\caption{W³asnoœci masowe cz³onów mechanizmu Andrews'a} \label{tabMasy}
+\end{minipage}
+\begin{minipage}[t]{0.35\textwidth}  
+\flushright
+\begin{tabular}[t]{|c|c|c|} \hline
+\textbf{Punkt} & $\bb{x_g[m]}$ & $\bb{y_g[m]}$ \\ \hline
+A & -0.06934 & -0.00227 \\ \hline
+B & -0.03635 & 0.03273 \\ \hline
+C & 0.01400 & 0.07200 \\ \hline
+\end{tabular}
+\caption{Globalne wspó³rzedne punktów mocowañ $A$, $B$ i $C$} \label{tabPunkty}
+\end{minipage}
+\end{table}
+
+Zgodnie z rozumowaniem przedstawionym w podrozdziale \ref{sfRówDyn} wygodniej jest lokalne uk³ady wspó³rzêdnych zaczepiæ w~œrodkach masy. Wymaga to przesuniêcia uk³adów tak jak przedstawiono na rysunku poni¿ej:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{Andrews_czlony}
+\caption{Lokalne uk³ady wspó³rzêdnych zaczepione w œrodkach masy}
+\end{figure}
+
+Dla uk³adów lokalnych zdefiniowanych w ten sposób nowa tabela lokalnych punktów mechanizmu wygl¹da nastêpuj¹co:
+
+\begin{table}[H]
+\small
+\begin{minipage}[t]{0.5\textwidth}
+\centering
+\begin{tabular}[t]{|c|c|c|c|c|} \hline
+\textbf{Lp.} & \textbf{Cz³on} & \textbf{Punkt} & \textbf{x[m]} & \textbf{y[m] }\\ \hline
+1 & \emph{O-F} & \emph{O} & -0.00092 & 0.0 \\ \cline{3-5}
+  &            & \emph{F} & 0.00608 & 0.0 \\ \hline
+2 & \emph{E-F} & \emph{E} & -0.0165 & 0.0 \\ \cline{3-5}
+  & 		   & \emph{F} & 0.0115 & 0.0 \\ \hline
+3 & \emph{H-E} & \emph{H} & -0.00579 & 0.0 \\ \cline{3-5}
+  & 		   & \emph{E} & 0.01421 & 0.0 \\ \hline
+4 & \emph{G-E} & \emph{G} & -0.00579 & 0.0 \\ \cline{3-5}
+  & 		   & \emph{E} & 0.01421 & 0.0 \\ \hline
+\end{tabular}
+\end{minipage}
+\begin{minipage}[t]{0.5\textwidth}
+\centering
+\begin{tabular}[t]{|c|c|c|c|c|} \hline
+\textbf{Lp.} & \textbf{Cz³on} & \textbf{Punkt} & \textbf{x[m]} & \textbf{y[m] }\\ \hline
+5 & \emph{A-G} & \emph{A} & -0.02308 & -0.00916 \\ \cline{3-5}
+  &            & \emph{G} & 0.01692 & -0.00916 \\ \hline
+6 & \emph{A-H} & \emph{A} & -0.01228 & 0.00449 \\ \cline{3-5}
+  & 		   & \emph{H} & 0.02772 & 0.00449 \\ \hline
+7 & \emph{E-B-D} & \emph{E} & -0.01043 & -0.01626 \\ \cline{3-5}
+  &			 	 & \emph{B} & -0.01043 & 0.01874 \\ \cline{3-5}
+  & 		     & \emph{D} & 0.00957 & 0.00074 \\ \hline
+\end{tabular}
+\end{minipage}
+\caption{Wspó³rzêdne punktów mechanizmu zapisane w uk³adach zaczepionych w œrodkach mas} \label{tabPunktyNowe}
+\end{table}
+
+Sztywnoœæ sprê¿yny $k=4530 \frac{N}{m}$, jej d³ugoœæ swobodna $l_0 = 0.07785$ m. Na cz³on \emph{E-F} dzia³a sta³y moment o wartoœci $\tau=0.033$ Nm. Mechanizm nie podlega dzia³aniu si³y grawitacji. Wartoœæ pocz¹tkowa k¹ta to $\beta_0=-0.062$ rad. W chwili pocz¹tkowej mechanizm jest nieruchomy. Ca³kowity czas symulacji wynosi $0.05$ s. Rysunek poni¿ej prezentuje wspó³rzêdne $x$ i $y$ punktu $F$ mechanizmu dostarczone przez \cite{bench}:
+
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{wykres_default}
+\caption{Przebieg po³o¿enia punktu $F$ w czasie 0.05 s}
+\end{figure}
+
+\subsubsection{Sformu³owanie modelu matematycznego} \label{modMat}
+
+\paragraph{Wprowadzenie wspó³rzêdnych} 
+\hspace{0.3cm}
+
+Do opisu mechanizmu u¿yto wspó³rzêdnych absolutnych. Dla ka¿dego $i$-tego cz³onu zdefiniowano wektor:
+\begin{equation}
+\bb{q}_i=\begin{bmatrix}
+\bb{r}_i \\ \varphi_i
+\end{bmatrix}
+\end{equation}
+
+Gdzie zgodnie z (\ref{wekq}):
+\begin{equation}
+\bb{r}_i= \begin{bmatrix}
+x_i \\ y_i
+\end{bmatrix}
+\end{equation}
+
+Globalny wektor $\bb{q}$ ma wymiar 21 i zbudowany jest zgodnie z (\ref{globq}).
+
+\paragraph{Równania wiêzów}
+\hspace{0.3cm}
+
+Równanie wiêzów postaci (\ref{eqWiezy}) uzyskaæ mo¿na poprzez z³o¿enie 10 równañ wiêzów dla par obrotowych postaci (\ref{paraObrotowa}). Wektory $\bb{s}_i$ i $\bb{s}_j$ dla konkretnej pary obrotowej zapisane s¹ w tabeli \ref{tabPunktyNowe}. Warto zauwa¿yæ, ¿e w punkcie $E$ znajduj¹ siê de facto 3 pary obrotowe (zwi¹zane s¹ tutaj ze sob¹ 4 cz³ony). Zwi¹zano ze sob¹ odpowiednio cz³ony 2 z 3, 2 z 4 i 2 z 7. 
+
+\paragraph{Macierz Jacobiego, pochodna Macierzy Jacobiego i macierz masowa}
+\hspace{0.3cm}
+
+Globaln¹ macierz Jacobiego $\bb{\Phi}_\bb{q}$ obliczono wstawiaj¹c w odpowiednich miejscach macierze pochodnych cz¹stkowych wiêzów postaci (\ref{J1})-(\ref{J4}). Analogicznie, pochodn¹ po czasie z macierzy Jacobiego policzono ze wzoru (\ref{dJacobi}) w odpowiednie miejsca wstawiaj¹c wyra¿enia (\ref{dJ1})-(\ref{dJ4}). 
+
+Globaln¹ macierz masow¹ zbudowano z macierzy masowych dla poszczególnych cz³onów w~oparciu o wzory (\ref{rówDyn}) i (\ref{global}). 
+
+\paragraph{Model sprê¿yny}
+\hspace{0.3cm}
+
+Sprê¿yna w Mechanizmie Andrews'a ³¹czy punkty $D$ i $C$. Wektor $\bb{d}$ ³¹cz¹cy te punkty mo¿na zapisaæ jako:
+\begin{equation}
+\bb{d} = \bb{r}_C - \bb{r}_7 - \bb{R}_7 \bb{s}_D
+\end{equation}
+
+Gdzie $\bb{r}_C$ to wektor wskazuj¹cy na punkt $C$ w uk³adzie globalnym, a $\bb{s}_D$ to wektor wskazuj¹cy na punkt $D$ w uk³adzie zwi¹zanym z cz³onem \emph{E-B-D}.
+
+Wartoœæ si³y w sprê¿ynie $F_s$ oblicza siê ze wzoru:
+\begin{equation}
+F_s = k(d-l_0)
+\end{equation}
+
+Gdzie $d = |\bb{d}| = \sqrt{\bb{d}^T\bb{d}}$.
+
+Kierunek dzia³ania powy¿szej si³y zgodny jest z kierunkiem wektora $\bb{d}$. Wersor $\bb{v}$ tego wektora przedstawia siê nastêpuj¹co:
+\begin{equation}
+\bb{v} = \frac{1}{d} \bb{d}
+\end{equation}
+
+Wektor si³y uogólnionej $\bb{Q}_s$ pochodz¹cej od sprê¿yny mo¿na zapisaæ jako:
+\begin{equation}
+\bb{Q}_s = \begin{bmatrix}
+\bb{F}_s \\ \textrm{M}_s
+\end{bmatrix} = \begin{bmatrix}
+\bb{I}_{2x2} \\ (\bb{\Omega}\bb{R}_7 \bb{s}_D)^T
+\end{bmatrix} \bb{v} F_s = k\left(1-\dfrac{l_0}{d} \right) \begin{bmatrix}
+\bb{I}_{2x2} \\ (\bb{\Omega}\bb{R}_7 \bb{s}_D)^T
+\end{bmatrix} \bb{d}
+\end{equation}
+
+Istnieje równie¿ koniecznoœæ wyprowadzenia wyra¿enia $\dfrac{\mbox{d}\bb{Q}}{\mbox{d}\bb{q}}$ wystêpuj¹cego w (\ref{dg11}). Wyra¿enie to mo¿na przedstawiæ w postaci (dla wygody zapisu pominiêto indeks dolny):
+\begin{equation}
+\dfrac{\mbox{d}\bb{Q}}{\mbox{d}\bb{q}}=
+\begin{bmatrix}
+\dfrac{\mbox{d}\bb{F}}{\mbox{d}\bb{r}} & \dfrac{\mbox{d}\bb{F}}{\mbox{d}\varphi} \\
+\dfrac{\mbox{d}\textrm{M}}{\mbox{d}\bb{r}} & \dfrac{\mbox{d}\textrm{M}}{\mbox{d}\varphi}
+\end{bmatrix}
+\end{equation}
+
+Gdzie poszczególne cz³ony przyjmuj¹ postaæ:
+\begin{align}
+\dfrac{\mbox{d}\bb{F}}{\mbox{d}\bb{r}} &= k \left[\left(\dfrac{l_0}{d} -1\right)\bb{I} - \dfrac{l_0}{d} \bb{d}\bb{d}^T \right] \\
+\dfrac{\mbox{d}\bb{F}}{\mbox{d}\varphi} &= k \left[\left(\dfrac{l_0}{d} -1\right)\bb{I} - \dfrac{l_0}{d} \bb{d}\bb{d}^T \right] \bb{\Omega}\bb{R}_7 \bb{s}_D \\
+\dfrac{\mbox{d}\textrm{M}}{\mbox{d}\bb{r}} &= k (\bb{\Omega}\bb{R}_7 \bb{s}_D)^T \left[\left(\dfrac{l_0}{d} -1\right)\bb{I} - \dfrac{l_0}{d} \bb{d}\bb{d}^T \right] \\
+\dfrac{\mbox{d}\textrm{M}}{\mbox{d}\varphi} &= k \left[ (\bb{\Omega}\bb{R}_7 \bb{s}_D)^T \left[\left(\dfrac{l_0}{d} -1\right) \bb{I} - \dfrac{l_0}{d} \bb{d}\bb{d}^T \right] \bb{\Omega}\bb{R}_7 \bb{s}_D + \left(\dfrac{l_0}{d} -1\right)(\bb{R}_7\bb{s}_D)^T \bb{d} \right]
+\end{align}
+
+\paragraph{Obliczenie energii}
+\hspace{0.3cm}
+
+Energia ca³kowita uk³adu $E$ mo¿e byæ policzona jako suma energii kinetycznej $T$ i potencjalnej $V$:
+\begin{equation}
+E=T+V
+\end{equation}
+
+Energia kinetyczna $T$ mo¿e byæ obliczona jako: 
+\begin{equation}
+T=\frac{1}{2} \bb{\dot{q}}^T \bb{M} \bb{\dot{q}}
+\end{equation}
+
+Energia potencjalna $V$ pochodzi od sprê¿yny mo¿na obliczyæ ze wzoru: 
+\begin{equation}
+V=\dfrac{k}{2}(d-l_0)^2
+\end{equation}
+
+Przyrost energii ca³kowitej kosztem praca wykonanej przez moment $\tau$ nad mechanizmem Andrews'a mo¿e byæ przedstawiony w postaci:
+\begin{equation}
+E-E_0=\tau(\beta-\beta_0)
+\end{equation}
+
+Gdzie $E_0$ to energia ca³kowita w chwili pocz¹tkowej $t=0$.
+
+Odchylenie numeryczne energii ca³kowitej to ró¿nica miêdzy wartoœci¹ obliczon¹ numerycznie $E_{num}$ a wartoœci¹ rzeczywist¹ $E_{real}$. Oznaczono je jako $\Delta U$ (dla idealnej symulacji powinno wynosiæ to¿samoœciowo 0):
+\begin{equation}
+\Delta U=E_{num}-E_{real}
+\end{equation}
+
+Zbieraj¹c powy¿sze wzory mo¿na zapisaæ ostateczn¹ formu³ê na odchylenie od energii ca³kowitej:
+\begin{equation}
+\Delta U = T+V -E_0 -\tau (\beta - \beta_0)
+\end{equation}
+
+Zgodnie z zaleceniami przedstawionymi w \cite{bench} odchylenie nie to nie powinno byæ wiêksze ni¿ $10^{-5}$ J.
+
+Na rysunku \ref{A03_energy} przedstawiono odchylenie energii uzyskane w \cite{bench2} z zastosowaniem biblioteki \emph{OpenSim}, (jest to biblioteka open source przeznaczona do analizy modeli miêœniowo-szkieletowych i symulacji dynamicznej mechanizmów). 
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{A03_energy}
+\caption{Odchylenie energii dla symulacji wykonanej z wykorzystaniem biblioteki \emph{OpenSim}} \label{A03_energy}
+\end{figure}
+
+\paragraph{Wyznaczenie warunków pocz¹tkowych}
+\hspace{0.3cm}
+
+Zgodnie z danymi o strukturze mechanizmu zawartymi w tabeli \ref{tabPunkty} lokalizacje poszczególnych punktów przedstawione s¹ w uk³adach lokalnych. Wymagana jest wiedza o lokalizacji œrodków mas i k¹tach jakie tworz¹ lokalne uk³ady wspó³rzêdnych w uk³adzie globalnym. Wymagane jest w tym celu rozwi¹zanie zadania kinematyki dla po³o¿eñ. Problem ten zosta³ rozwi¹zany dwuetapowo (aby zagwarantowaæ zbie¿noœæ do poprawnego rozwi¹zania): \begin{enumerate}
+\item Rozwi¹zanie zadania dla wspó³rzêdnych z³¹czowych absolutnych
+
+W mechanizmie Andrews'a znajduj¹ siê 3 pêtle kinematyczne. Równanie wiêzów dla wspó³rzêdnych z³¹czowych absolutnych przedstawione zostanie na podstawie pêtli z rysunku poni¿ej:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{Andrews_mech_zlaczowe}
+\caption{Przyk³adowa pêtla kinematyczna}
+\end{figure}
+
+Równanie wiêzów $\bb{\Phi}^{pk}$ dla jednej pêtli przedstawia siê nastêpuj¹co:
+\begin{equation}
+\bb{\Phi}^{pk} = \bb{R}(\varphi_1)\bb{s}_1+\bb{R}(\varphi_2)\bb{s}_2+\bb{R}(\varphi_3)\bb{s}_3+\bb{R}(\varphi_6)\bb{s}_6 - \bb{r}_{OC} = \bb{0}
+\end{equation}
+
+Gdzie macierz $\bb{R}(\vartheta)$ to:
+\begin{equation}
+\bb{R}(\vartheta) = \begin{bmatrix}
+\cos(\vartheta) & -\sin(\vartheta) \\
+\sin(\vartheta) & \cos(\vartheta)
+\end{bmatrix}
+\end{equation}
+
+Wektory $\bb{s}_i$ zapisane s¹ w lokalnych uk³adach wspó³rzêdnych zgodnie z tabel¹ \ref{tabPunkty}.
+
+Tak zestawione równania dla 3 pêtli i zadanego k¹ta $\varphi_1=\beta_0$ rozwi¹zano przy pomocy procedury \emph{fsolve}  dedykowanej dla uk³adów nieliniowych. Jako wartoœæ startow¹ dla iteracji przyjêto wektor $\bb{\upvarphi}_{7x1}^0$ o wartoœciach:
+\begin{equation}
+\bb{\upvarphi}^0 = \begin{bmatrix}
+-0.062 & -0.062 & 0.5 & -0.5 & 0.5 & -0.5 & 0
+\end{bmatrix}^T
+\end{equation}
+
+Tak uzyskane k¹ty $\bb{\upvarphi}_{0i}$ zosta³y u¿yte jako przybli¿enie pocz¹tkowe dla obliczeñ we wspó³rzêdnych absolutnych.
+
+\item Rozwi¹zanie zadania dla wspó³rzêdnych absolutnych
+
+Schemat postêpowania przedstawiono w rozdziale \ref{absolutne}. Dane do budowy równañ wiêzów zaczerpniêto z tabeli \ref{tabPunktyNowe}. Jako przybli¿enie pocz¹tkowe dla $i$-tego cz³onu przyjêto wektor:
+\begin{equation}
+\bb{q}_i^0 = \begin{bmatrix}
+0 & 0 & \varphi_{0i}
+\end{bmatrix}^T
+\end{equation}
+
+Rozwi¹zuj¹c powy¿szy problem procedur¹ \emph{fsolve} otrzymaæ mo¿na wektor $\bb{q}_0$ wymagany w~zadaniu prostym dynamiki.
+\end{enumerate}
+
+\newpage
+\subsection{Wyniki symulacji}
+
+Symulacjê przeprowadzono dla ró¿nych kroków ca³kowania i parametrów stabilizacji. 
+
+Zgodnie z pracami \cite{3A} i \cite{4A} parametry $\alpha$, $\xi$ i $\omega$ wystêpuj¹ce w (\ref{sigma}) powinny byæ dobrane we w³aœciwy sposób: \begin{itemize}
+\item $\alpha$ - im wiêksze, tym szybsza zbie¿noœæ procesu iteracyjnego, jednak¿e za du¿e mo¿e spowodowaæ z³e uwarunkowanie macierzy stoj¹cej w równaniu (\ref{iterHam}). Parametr ten powinien byæ rzêdu $<10^6 ; 10^9>$. 
+\item $\xi$ - im wiêkszy, tym dok³adniej spe³nione s¹ wiêzy dla po³o¿eñ (kosztem wiêzów dla prêdkoœci). Parametr ten powinien byæ wiêkszego rzêdu ni¿ $10^3$, aby zapewniæ stabilnoœæ energii.
+\item $\omega$  - parametr ten mo¿e byæ przyjêty jako 1.
+\end{itemize}
+
+\subsubsection{U¿ycie jawnej procedury ca³kuj¹cej} \label{jawnaProc}
+
+Sformu³owanie opisano w podrozdziale \ref{sformulowanie3}. Dok³adnoœæ z równania (\ref{epsilon1}) ustalono na $\varepsilon=10^{-10}$. Maksymaln¹ liczbê iteracji ograniczono do 10. Krok czasowy zosta³ przyjêty jako $h=~10^{-5}$ s. Co istotne, zmniejszenie kroku czasowego (do rzêdu $10^{-6}$ s) nie powodowa³o poprawy zachowania rozwi¹zania. Jako procedury ca³kuj¹cej u¿yto procedury \emph{ode45}. Pokazany zostanie wp³yw doboru parametru $\xi$ na mo¿liwe zachowania rozwi¹zania.
+
+\paragraph{Wykresy}
+\hspace{0.2cm}
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{AH_E_zbiorczy}
+\caption{Porównanie odchylenia energii dla $\alpha=10^8$, $\omega=1$}
+\end{figure}
+
+\newpage
+\begin{enumerate}
+\item $\alpha=10^8$, $\xi=10^2$, $\omega=1$
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{AH_Phi_a8_xi2_om0}
+\caption{Wiêzy na po³o¿enia, $\alpha=10^8$, $\xi=10^2$}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{AH_dPhi_a8_xi2_om0}
+\caption{Wiêzy na prêdkoœci, $\alpha=10^8$, $\xi=10^2$}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{AH_E_a8_xi2_om0}
+\caption{Odchylenie energii ca³kowitej, $\alpha=10^8$, $\xi=10^2$}
+\end{figure}
+
+\newpage
+\item $\alpha=10^8$, $\xi=10^3$, $\omega=1$
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{AH_Phi_a8_xi3_om0}
+\caption{Wiêzy na po³o¿enia, $\alpha=10^8$, $\xi=10^3$}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{AH_dPhi_a8_xi3_om0}
+\caption{Wiêzy na prêdkoœci, $\alpha=10^8$, $\xi=10^3$}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{AH_E_a8_xi3_om0}
+\caption{Odchylenie energii ca³kowitej, $\alpha=10^8$, $\xi=10^3$}
+\end{figure}
+
+\newpage
+\item $\alpha=10^8$, $\xi=10^4$, $\omega=1$
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{AH_Phi_a8_xi4_om0}
+\caption{Wiêzy na po³o¿enia, $\alpha=10^8$, $\xi=10^4$}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{AH_dPhi_a8_xi4_om0}
+\caption{Wiêzy na prêdkoœci, $\alpha=10^8$, $\xi=10^4$}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{AH_E_a8_xi4_om0}
+\caption{Odchylenie energii ca³kowitej, $\alpha=10^8$, $\xi=10^4$}
+\end{figure}
+
+\newpage
+\item $\alpha=10^8$, $\xi=10^5$, $\omega=1$
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{AH_Phi_a8_xi5_om0}
+\caption{Wiêzy na po³o¿enia, $\alpha=10^8$, $\xi=10^5$}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{AH_dPhi_a8_xi5_om0}
+\caption{Wiêzy na prêdkoœci, $\alpha=10^8$, $\xi=10^5$}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{AH_E_a8_xi5_om0}
+\caption{Odchylenie energii ca³kowitej, $\alpha=10^8$, $\xi=10^5$}
+\end{figure}
+
+\end{enumerate}
+
+\newpage
+\paragraph{Wnioski}
+
+\begin{itemize}
+\item W ¿adnym przypadku nie uda³o siê spe³niæ warunku na maksymalne odchylenie energii rzêdu $10^{-5}$ J.
+\item U¿ycie procedury \emph{ode45} bazuj¹cej na metodach RK (rozdz. \ref{RK}) powoduje narastanie energii ca³kowitej. Przy nieodpowiednim doborze paramatru $\xi$ energia mo¿e narastaæ bardzo szybko w sposób niekontrolowany.
+\item Odchylenie energii jest akceptowalne dla $\xi=10^4$.
+\item Zwiêkszanie parametru $\xi$ prowadzi do coraz gorszego spe³nienia równañ wiêzów dla prêdkoœci. 
+\item Wiêzy dla po³o¿eñ s¹ spe³niane z coraz wiêksz¹ dok³adnoœci¹ w pewnym zakresie zwiêkszania $\xi$. Dla $\xi=10^5$ wiêzy dla po³o¿eñ zachowuj¹ siê gorzej ni¿ dla $\xi=10^4$.
+\item Dla parametru $\xi$ rzêdu $10^6$ nie osi¹gniêto zbie¿noœci.
+\end{itemize}
+
+\subsubsection{U¿ycie metody trapezów}
+
+Sformu³owanie opisano w podrozdziale \ref{sformulowanie4}. Dok³adnoœæ z równania (\ref{epsilon2}) ustalono na $\varepsilon=~10^{-10}$. Maksymaln¹ liczbê iteracji ograniczono do 10. 
+
+\paragraph{Porównanie z metodami jawnymi}
+\hspace{0.3cm}
+
+Krok czasowy ustalono na $h=10^{-5}$ s. Symulacja z u¿yciem metody trapezów zostanie przeprowadzona dla takiego samego zestawu parametrów jak poprzednio. 
+
+\paragraph{Wykresy}
+\hspace{0.2cm}
+
+Kolejne 3 wykresy przedstawiaj¹ wyniki symulacji dla kolejnych wartoœci $\xi$ takich jak w~podrozdziale \ref{jawnaProc}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{NR_E_zbiorczy1}
+\caption{Porównanie odchylenia energii dla $\alpha=10^8$, $\omega=1$}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{NR_Phi_zbiorczy1log}
+\caption{Spe³nienie wiêzów na po³o¿enia dla 4 zestawów parametrów (skala logarytmiczna), $\alpha=10^8$, $\omega=1$}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{NR_dPhi_zbiorczy1log}
+\caption{Spe³nienie wiêzów na prêdkoœci dal 4 zestawów parametrów (skala logarytmiczna),  $\alpha=10^8$, $\omega=1$}
+\end{figure}
+
+Na kolejnych 3 wykresach zestawione zostan¹ wyniki uzyskane w rozdziale \ref{jawnaProc} z tymi uzyskanymi za pomoc¹ metody trapezów, $\xi=10^4$. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{AH_NR_E_comp}
+\caption{Porównanie odchylenia energii dla 2 algorytmów ca³kowania}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{AH_NR_Phi_comp}
+\caption{Spe³nienie wiêzów na po³o¿enia dla 2 algorytmów ca³kowania (skala logarytmiczna)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{AH_NR_dPhi_comp}
+\caption{Spe³nienie wiêzów na prêdkoœci dla 2 algorytmów ca³kowania (skala logarytmiczna)}
+\end{figure}
+
+\paragraph{Wnioski}
+
+\begin{itemize}
+\item Energia ca³kowita jest zachowywana (niezale¿enie od doboru parametrów wartoœæ odchylenia energii oscyluje wokó³ zera). Istnieje sposób, aby zapobiec narastaniu energii. Zachowywanie energii jest w³asnoœci¹ metody trapezów, o czym by³o wspomniane w podrozdziale \ref{trapezy}.
+\item Zwiêkszanie parametru $\xi$ powoduje poprawê spe³nienia równañ wiêzów dla po³o¿eñ, jednak¿e kosztem pogorszenia wiêzów dla prêdkoœci.
+\item W przeciwieñstwie do ca³kowania metod¹ jawn¹, gdzie bardzo wa¿ny by³ dobór parametrów stabilizacji, przy ca³kowaniu metod¹ \emph{A-stabiln¹} zakres parametrów $\xi$ dla których osi¹gniêto zadowalaj¹ce rozwi¹zanie jest szerszy (dla metody trapezów zbie¿ne by³o rozwi¹zanie równie¿ dla $\xi=10^6$). Jest to po¿¹dana w³asnoœæ z punktu widzenia ³atwoœci algorytmizacji.
+\item Dla tych samych parametrów $\alpha$, $\xi$ i $\omega$ dok³adnoœæ spe³nienia równañ wiêzów jest o 2 rzêdy wy¿sza zarówno dla po³o¿eñ i prêdkoœci na korzyœæ metody trapezów. Nie wystêpuje te¿ narastanie wartoœci œredniej odchylenia energii (jak przy ca³kowaniu \emph{ode45}).
+\item Jak bêdzie pokazane w dalszych punktach, zmniejszenie kroku czasowego pozytywnie wp³ynie na odwzorowanie energii i spe³nienie wiêzów.
+
+\end{itemize}
+
+Podsumowuj¹c, rozwi¹zanie uzyskane za pomoc¹ metody trapezów jest stabilniejsze, dok³adniejsze, mniej podatne na dobór parametrów stabilizacji.
+
+\subsubsection{Spe³nienie warunku na energiê}
+
+W celu spe³nienia warunku na energiê postawionego w \cite{bench} ustawiono dok³adnoœæ $\varepsilon = 10^{-12}$. Krok czasowy zmniejszono do $h = 10^{-6}$ s. Na pocz¹tku porównane zostanie zachowanie rozwi¹zania w wyniku zmniejszenia kroku czasowego. Nastêpnie Symulacja zostanie przeprowadzona dla zwiêkszonych parametrów stabilizacji. 
+
+\paragraph{Wykresy} \hspace{0.2cm}
+
+Zestaw 3 pierwszych wykresów wykonano dla $\alpha = 10^8$, $\xi = 10^4$, $\omega = 1$. Zestawiono ze sob¹ 2 rozwi¹zania:
+\begin{enumerate}
+\item krok czasowy $h = 10^{-5}$
+\item krok czasowy $h = 10^{-6}$
+\end{enumerate}
+
+Kolejne 3 wykresy zestawiaj¹ ze sob¹ 2 rozwi¹zania dla kroku czasowego $h = 10^{-6}$:
+\begin{enumerate}
+\item $\alpha = 10^8$, $\xi = 10^4$, $\omega = 1$
+\item $\alpha = 10^9$, $\xi = 10^6$, $\omega = 1$
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{TR_TR_E_time_compare}
+\caption{Porównanie odchylenia energii dla ró¿nych kroków czasowych}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{TR_TR_Phi_time_compare}
+\caption{Spe³nienie wiêzów na po³o¿enia dla ró¿nych kroków czasowych (skala logarytmiczna)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{TR_TR_dPhi_time_compare}
+\caption{Spe³nienie wiêzów na prêdkoœci dla ró¿nych kroków czasowych (skala logarytmiczna)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{NR_NR_E_comp1}
+\caption{Porównanie odchylenia energii dla 2 zestawów parametrów stabilizacji}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{NR_NR_Phi_comp1}
+\caption{Spe³nienie wiêzów na po³o¿enia dla 2 zestawów parametrów stabilizacji (skala logarytmiczna)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{NR_NR_dPhi_comp1}
+\caption{Spe³nienie wiêzów na prêdkoœci dla 2 zestawów parametrów stabilizacji}
+\end{figure}
+
+\paragraph{Wnioski}
+\begin{itemize}
+\item Zmniejszenie kroku czasowego o 1 rz¹d wielkoœci w istotny sposób poprawia zachowanie energii. Wiêzy dla po³o¿eñ i prêdkoœci s¹ spe³niane z dok³adnoœci¹ o 2 rzêdy wiêksz¹.
+\item Uda³o siê, poprzez zwiêkszenie parametrów stabilizacji, uzyskaæ o 2 rzêdy dok³adniejsze spe³nienie wiêzów dla po³o¿eñ, bez istotnego wp³ywu na zachowanie energii i wiêzów dla prêdkoœci.
+\item Uda³o siê spe³niæ wymaganie na maksymalne odchylenie energii ca³kowitej. Maksymalne odchylenie by³o rzêdu $\Delta U = 2\cdot 10^{-6}$ J. 
+\end{itemize}
+
+\subsubsection{Problematyka wektora $\bm{\upsigma}$}
+
+Zgodnie z równaniem (\ref{lam2sig}) zachodzi:
+\begin{equation} \label{calkaSig}
+\bm{\upsigma}= \int\limits_{t_0}^t \bm{\uplambda} d\tau
+\end{equation}
+
+Zgodnie z równaniem (\ref{eqLam}) wektor $\bm{\uplambda}$ reprezentuje si³y reakcji zwi¹zne z odpowiednimi wiêzami. Niesie to dwie wa¿ne konsekwencje:
+\begin{enumerate}
+\item Wartoœæ wektora $\bm{\upsigma}$ w chwili pocz¹tkowej $t_0=0$ mo¿e byæ ustawiona arbitralnie (np. na wektor zerowy, jak czyniono do tej pory).
+\item Niektóre sk³adniki wektora $\bm{\upsigma}$ mog¹ w sposób niekontrolowany rosn¹æ, je¿eli odpowiednie sk³adowe wektora $\bm{\uplambda}$ nie zmieniaj¹ znaku. Taki stan mo¿e spowodowaæ pogorszenie zbie¿noœci rozwi¹zania i doprowadziæ do przerwania symulacji. Problem rozwi¹zaæ mo¿na przerywaj¹c proces ca³kowania, zeruj¹c wektor $\bm{\upsigma}$, a nastêpnie wyliczaj¹c odpowiadaj¹ce wartoœci momentów uogólnionych $\bb{p}$ i ich pochodnych $\bb{\dot{p}}$ ze wzorów (\ref{pêdy}) i (\ref{dPêdy}).
+\end{enumerate}
+
+Przedstawiony zostanie wp³yw tego zjawiska na zbie¿noœæ procesu. Parametry symulacji ponownie ustawiono na $\epsilon=10^{-12}$, maksymaln¹ liczbê iteracji ustawiono na 10, a krok czasowy $h = 10 ^{-5}$ s. Czas symulacji wyniós³ $0.3$ s. Wykres poni¿ej prezentuje zachowanie normy z wektora $\bm{\upsigma}$.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{normSigma}
+\caption{Norma z wektora $\bb{\upsigma}$ w czasie 0.3 s symulacji}
+\end{figure}
+
+Zaproponowano rozwi¹zanie, polegaj¹ce na sprawdzaniu w ka¿dym kroku czasowym $k$, czy wartoœæ $|\bb{\upsigma}_k| < 4$. Je¿eli tak, nastêpuje zerowanie tego wektora. Efekt tego dzia³ania prezentuje wykres poni¿ej.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{normSigma2}
+\caption{Norma z wektora $\bb{\upsigma}$ w czasie 0.3 s symulacji z okresowym zerowaniem w trakcie trwania symulacji}
+\end{figure}
+
+Zastosowanie takiego zabiegu nie wp³ynê³o na dok³adnoœæ spe³nienia wiêzów, jednak¿e ustabilizowa³o odchy³ki energii, co zaprezentowano na wykresie poni¿ej.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{sigma_energia1}
+\caption{Odchylenia energii ca³kowitej w czasie 0.05 s przed i po zastosowaniu kontroli dla $\bb{\upsigma}$}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{sigma_energia2}
+\caption{Odchylenia energii ca³kowitej w czasie 0.3 s przed i po zastosowaniu kontroli dla $\bb{\upsigma}$}
+\end{figure}
+
+\clearpage{\pagestyle{empty}\cleardoublepage}
+\section{Podsumowanie i perspektywy}
+
+Konsekwentnie starano siê przedstawiæ wy¿szoœæ niejawnych metod ca³kowania, a w szczególnoœci metody trapezów. Metoda ta, pomimo ni¿szego rzêdu od metod RK45, wykazuje lepsze w³aœciwoœci w zastosowaniu do równañ ró¿niczkowo-algebraicznych.  Stwierdziæ mo¿na te¿, ¿e sformu³owanie równañ kanonicznych Hamiltona opartych na rozszerzonym lagran¿janie zwraca zadowalaj¹ce rezultaty niezale¿nie od parametrów stabilizacji, co umo¿liwia zalgorytmizowanie dowolnego problemu. 
+
+\vspace{0.4cm}
+Perspektywy rozwoju problematyki opisanej w niniejszej pracy obejmuj¹:
+\begin{enumerate}
+\item Przetestowanie równañ kanonicznych w zjawiskach nieci¹g³ych (zderzenia).
+\item Przetestowanie metod opartych na rozszerzonym lagran¿janie na mechanizmach osi¹gaj¹cych po³o¿enia osobliwe. Przeprowadzenie symulacji w sytuacji kiedy po³o¿enie osobliwe jest osi¹gane wielokrotnie.
+\item Zaimplementowanie modelu pozwalaj¹cego symulowaæ mechanizmy przestrzenne we wspó³rzêdnych absolutnych (3 wspó³rzêdne liniowe, 4 parametry Eulera).
+\item Implementacja wszystkich procedur w jêzyku \emph{C++}, profilowanie uzyskanej aplikacji pod k¹tem doboru kroku ca³kowania, doboru parametrów stabilizacji.
+\end{enumerate}
+
+
+
+\clearpage{\pagestyle{empty}\cleardoublepage}
+\renewcommand{\refname}{Spis piœmiennictwa}
+\begin{thebibliography}{99} %co najwy¿ej dwucyfrowa numeracja
+\addcontentsline{toc}{section}{Spis piœmiennictwa}
+
+\bibitem{KDSMS} Bayo E., Jal\'{o}n J.G.:
+\emph{Kinematic and Dynamic Simulation of Multibody Systems: The Real-Time Challenge.} Springer-Verlag, 1994
+
+\bibitem{MSH} Schiehlen W.:
+\emph{Multibody Systems Handbook} Springer-Verlag, 1990
+
+\bibitem{DUW} Fr¹czek J., Wojtyra M.:
+\emph{Dynamika uk³adów wielocz³onowych. Treœæ wyk³adu.} 2009
+
+\bibitem{MUW} Fr¹czek J., Wojtyra M.:
+\emph{Metoda uk³adów wielocz³onowych w dynamie mechanizmów. Æwiczenia z zastosowaniem programu ADAMS.} OWPW, 2007
+
+\bibitem{0A} Bayo E., Garcia de Jal\'{o}n N., Serna M.A.:
+\emph{A modified Lagrangian formulation for the dynamic analysis of constrained mechanical systems.} 
+Computer Methods in Applied Mechanics and Engineering, 1988
+
+\bibitem{1A} Lankarani H.M., Nikaravesh P.E.:
+\emph{Application of the canonical equations of motion in problems of constrained multibody systems with intermittent motion.} 
+Advances in Design Automation, 1988
+
+\bibitem{Bau} Baumgarte J.:
+\emph{Stabilization of constraints and integrals of motion in dynamical systems.}
+Computer Methods in Applied Mechanics and Engineering, 1972
+
+\bibitem{2A} Bayo E., Avello A.:
+\emph{Singularity-free augmented Lagrangian algorithms for constrained multibody dynamics.} Nonlinear Dyn., 1994
+
+\bibitem{3A} Bayo E., Jim\'{e}nez J.M., Serna M.A., Bastero J.M.:
+\emph{Penalty based Hamiltonian equations for the dynamic analysis of constrained mechanical systems.} Mech. Mach. Theory, 1993
+
+\bibitem{4A} Cuadrado J., Dopico D., Gonz\'{a}lez F., Pastorino R.:
+\emph{Behaviour of augmented Lagrangian and Hamiltonian methods for multibody dynamics in the proximity of singular configurations.} Springer Science+Business Media, 2016
+
+\bibitem{bench} IFToMM Technical Committee for Multibody Dynamics:
+\emph{Library of computational benachmark problems (2015).} \url{https://www.iftomm-multibody.org/benchmark/}
+
+\bibitem{bench2} Multi-Body Systems Benchmark in OpenSim:
+\emph{MBS Benchmark A03: Andrew’s Squeezer Mechanism} \url{http://rehabenggroup.github.io/MBSbenchmarksInOpenSim/benchmarks/A03_AndrewsMechanism.html}
+\end{thebibliography}
+
+\clearpage{\pagestyle{empty}\cleardoublepage}
+\listoffigures
+\listoftables
+
+\clearpage{\pagestyle{empty}\cleardoublepage}
+\section*{Za³¹czniki}
+\addcontentsline{toc}{section}{Za³¹czniki}
+\renewcommand*{\figurename}{Za³¹cznik}
+\setcounter{figure}{0}
+
+\subsection*{\emph{Flowchart diagram} dla algorytmu \ref{algSf4}}
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.01\textwidth]{code2flow}
+\end{figure}
+
+
+\end{document}
+

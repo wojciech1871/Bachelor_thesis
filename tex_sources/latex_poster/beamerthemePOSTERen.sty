@@ -1,0 +1,105 @@
+%Packages 
+\usepackage[orientation=landscape, size=a3]{beamerposter}
+\usepackage[utf8]{inputenc}
+\usepackage[english,polish]{babel}
+%\usepackage[absolute,overlay,showboxes]{textpos}
+\usepackage[absolute,overlay]{textpos}
+\usepackage[default]{sourcesanspro} % WUT fonts
+\usepackage{amsmath,amsthm, amssymb, latexsym}
+\usepackage{ragged2e}
+\usepackage{lipsum}
+\usepackage{tikz}
+\mode<presentation>
+
+\setbeamertemplate{navigation symbols}{}  % no navigation on a poster
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setbeamertemplate{headline}{  
+  \leavevmode
+
+  \begin{beamercolorbox}[wd=\paperwidth,ht=1.0cm]{headline}
+  \end{beamercolorbox}
+%  \begin{tikzpicture}
+%  \shade[draw=none,top color=mainColor,bottom color=white] (0,0) rectangle (\paperwidth,0.5cm);
+%  \end{tikzpicture}  
+  \begin{beamercolorbox}[wd=\paperwidth,ht=0.5cm]{margin}
+  \end{beamercolorbox}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setbeamertemplate{footline}{
+  \leavevmode
+  \begin{beamercolorbox}[wd=\paperwidth,ht=0.5cm]{margin}
+  \end{beamercolorbox}
+
+ 
+  \begin{beamercolorbox}[wd=\paperwidth,ht=1.75cm]{footline}
+    \begin{columns}
+   	\begin{column}{1.0\paperwidth}
+   	
+%   	\href{www.meil.pw.edu.pl}{\includegraphics[width=1.0\paperwidth,keepaspectratio]{footer}}
+   	\href{http://ztmir.meil.pw.edu.pl}{\includegraphics[width=1.0\paperwidth,keepaspectratio]{footer3}}
+
+   	\end{column}
+    \end{columns}
+  \end{beamercolorbox}
+}
+
+%Defined colors
+\definecolor{mainColor}{RGB}{120,150,207}
+\definecolor{lightgray}{RGB}{180,160,170}
+\definecolor{additional}{RGB}{60,60,76}
+
+\setbeamercolor{headline}{fg=white,bg=mainColor}
+\setbeamercolor{footline}{fg=black, bg=white}
+
+\setbeamercolor{normal text}{fg=black, bg=white}
+\setbeamercolor{block title}{fg=white,bg=mainColor}
+\setbeamercolor{block body}{fg=black,bg=lightgray}
+%\setbeamertemplate{blocks}[rounded][shadow=true]
+
+\setbeamertemplate{itemize items}[circle]
+\setbeamercolor{enumerate item}{fg=mainColor,bg=white}
+\setbeamercolor{enumerate subitem}{fg=mainColor,bg=white}
+\setbeamercolor{enumerate subsubitem}{fg=mainColor,bg=white}
+
+\setbeamercolor{itemize item}{fg=mainColor,bg=white}
+\setbeamercolor{itemize subitem}{fg=mainColor,bg=white}
+\setbeamercolor{itemize subsubitem}{fg=mainColor,bg=white}
+
+% font sizes
+\renewcommand*{\tiny}{\fontsize{6}{7.2}\selectfont}
+\renewcommand*{\scriptsize}{\fontsize{8}{9.6}\selectfont}
+\renewcommand*{\footnotesize}{\fontsize{10}{12}\selectfont}
+\renewcommand*{\small}{\fontsize{11}{13.2}\selectfont}
+\renewcommand*{\normalsize}{\fontsize{12}{14.4}\selectfont}
+\renewcommand*{\large}{\fontsize{14}{16.8}\selectfont}
+\renewcommand*{\Large}{\fontsize{17}{20.4}\selectfont}
+\renewcommand*{\LARGE}{\fontsize{20}{24}\selectfont}
+\renewcommand*{\huge}{\fontsize{25}{30}\selectfont}
+\renewcommand*{\Huge}{\fontsize{30}{36}\selectfont}
+
+% math fonts 
+\renewcommand\mathfamilydefault{\rmdefault}
+
+\makeatletter
+\newcommand\thefontsize[1]{{#1 The current font size is: \f@size pt\par}}
+\makeatother
+
+\setbeamercolor{margin}{fg=white,bg=white}
+\setbeamercolor{title}{fg=black,bg=white}
+
+
+% bold symbol for matrices 
+\newcommand{\mat}[1]{\boldsymbol{\mathrm{#1}}}
+\AtBeginDocument{
+\renewcommand*{\figurename}{\color{black} \textbf{Figure}}
+\renewcommand*{\tablename}{\color{black} \textbf{Table}}
+}
+
+\setlength{\TPHorizModule}{10mm}
+\setlength{\TPVertModule}{10mm}
+
+\mode<all>
